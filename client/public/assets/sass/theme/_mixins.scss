@@ -1,0 +1,51 @@
+@import '../_mixins';
+
+@mixin overlay-shadow {
+    @include shadow(0 6px 12px rgba(0,0,0,.175));
+}
+
+@mixin input-shadow() {
+    @include shadow(inset 0 1px 1px rgba(0,0,0,.075));
+}
+
+@mixin focused-input() {
+    border: 1px solid $inputFocusBorderColor;
+    @include multi-shadow(inset 0 1px 1px rgba(0,0,0,.075), 0 0 3px 0 $inputFocusBorderColor);
+}
+
+@mixin overlay() {
+    @include overlay-shadow();
+    border: 1px solid $overlayBorderColor;
+}
+
+@mixin content() {
+    background-color: $contentBgColor;
+    border: 1px solid $contentBorderColor;
+}
+
+@mixin header() {
+    background-color: $headerBgColor;
+    color: $headerTextColor;
+    border: 1px solid $headerBorderColor;
+    font-weight: bold;
+}
+
+@mixin corner-all() {
+    @include border-radius($borderRadius);
+}
+
+@mixin corner-top() {
+    @include border-radius-top($borderRadius);
+}
+
+@mixin corner-bottom() {
+    @include border-radius-bottom($borderRadius);
+}
+
+@mixin corner-left() {
+    @include border-radius-left($borderRadius);
+}
+
+@mixin corner-right() {
+    @include border-radius-right($borderRadius);
+}

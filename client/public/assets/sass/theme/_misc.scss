@@ -1,0 +1,46 @@
+body {
+    .p-progressbar {
+        border: 0 none;
+        @include border-radius($borderRadius);
+        background-color: #e3e3e3;
+
+        .p-progressbar-value {
+            border: 0 none;
+            background: lighten($primaryColor,10%);   
+            margin: 0;
+            @include border-radius($borderRadius);
+        }
+        
+        .p-progressbar-label {
+            margin-top: -1px;
+            color: $highlightTextColor;
+        }
+    }
+
+    .p-fileupload {
+        .p-fileupload-buttonbar {
+            @include header();
+            @include corner-top();
+            padding: $headerPadding;
+            border-bottom: 0 none;
+
+            .p-button {
+                margin-right: 8px;
+            }
+        }
+
+        .p-fileupload-content {
+            @include content();
+            @include corner-bottom();
+        }
+    }
+
+    .p-fileupload-choose:not(.p-disabled):hover,
+    .p-fileupload-choose.p-focus {
+        background-color: darken($primaryColor, 5%);
+    }
+
+    .p-fileupload-choose:not(.p-disabled):active {
+        background-color: darken($primaryColor, 10%);
+    }
+}

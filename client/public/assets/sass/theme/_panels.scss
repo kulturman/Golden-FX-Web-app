@@ -1,0 +1,341 @@
+body {
+    .p-panel {
+        @include content();
+        @include corner-all();
+        padding: 0;
+        border: 0 none;
+        
+        .p-panel-titlebar {
+            @include header();
+            border: 1px solid $headerBorderColor;
+            border-bottom: 1px solid $headerBorderColor;
+            padding: $headerPadding;
+            @include border-radius-top($borderRadius);
+            @include border-radius-bottom(0px);
+            
+            .p-panel-title {
+                line-height: 1.5em;
+                margin: 0;
+                font-size: 1.143em;
+            }
+            
+            .p-panel-titlebar-icon {
+                margin: 0;
+                font-size: $fontSize + 3;
+                color: $headerIconColor;
+                border: 1px solid transparent;
+                @include transition(color $transitionDuration);
+                
+                &:hover {
+                    color: $headerIconHoverColor;
+                }
+            }
+        }
+        
+        .p-panel-content {
+            border: 1px solid $panelContentBorderColor;
+            border-top: 0 none;
+            line-height: $contentLineHeight;
+            padding: $contentPadding;
+        }
+        
+        .p-panel-footer {
+            padding: $headerPadding;
+            border: 1px solid $contentBorderColor;
+            border-top: 0 none;
+            margin: 0;
+        }
+        
+        &.p-panel-collapsed-h {
+            .p-panel-titlebar {
+                padding-left: 40px;
+            }
+        }
+    }
+    
+    .p-fieldset {
+        @include content();
+        @include corner-all();
+        padding: 0 0 .5em 0;
+               
+        .p-fieldset-legend {
+            @include corner-all();
+            color: $headerTextColor;
+            background-color: $headerBgColor;
+            margin-left: .714em;
+            border: 1px solid $headerBorderColor;
+            
+            .p-fieldset-toggler {
+                float: none;
+                display: inline-block;
+                vertical-align: middle;
+                margin: 0 0.286em;
+                height: $fontSize;
+                margin-top: 0;
+                padding: 0;
+                color: $headerIconColor;
+            }
+
+            .p-fieldset-legend-text {
+                color: $headerTextColor;
+            }
+        }
+        
+        &.p-fieldset-toggleable {
+            .p-fieldset-legend {
+                &:hover, &:focus {
+                    background-color: $headerHoverBgColor;
+                    border-color: $headerHoverBorderColor;
+                    
+                    .p-fieldset-toggler {
+                        color: $headerIconHoverColor;
+                    }
+                }
+            }
+        }
+        
+        .p-fieldset-content {
+            padding: $contentPadding;
+        }
+    }
+    
+    .p-accordion {
+        .p-accordion-header {
+            @include border-radius($borderRadius);
+            background-color: $headerBgColor;
+            padding: 0;
+            color: $textColor;
+            font-size: $fontSize;
+            border: 1px solid $headerBorderColor;
+            margin-bottom: 0;
+            font-weight: bold;
+            margin-top: 0.357em;
+            
+            &:not(.p-highlight):not(.p-disabled) > a:hover {
+                border-color: $headerHoverBorderColor;
+                background-color: $headerHoverBgColor;
+            }
+                        
+            &.p-highlight {
+                @include border-radius-bottom(0);
+            }
+            
+            > a {
+                padding: $headerPadding;
+                font-size: $fontSize + 2;
+                color: $textColor;
+                outline: 0 none;   
+                
+                &:focus {
+                    border-color: $headerHoverBorderColor;
+                    background-color: $headerHoverBgColor;
+                } 
+                
+                .p-accordion-header-text {
+                    vertical-align: middle;
+                }
+                
+                .p-accordion-toggle-icon {
+                    color: $textColor;
+                    vertical-align: middle;
+                    margin-right: .25em;
+                    
+                    &.pi-caret-right {
+                        font-size: $fontSize + 2;
+                        
+                    }
+                    
+                    &.pi-caret-down {
+                        font-size: $fontSize + 2;
+                    }
+                }
+            }
+        }
+        
+        .p-accordion-content {
+            @include content();
+            padding: $contentPadding;
+            border-top: 0;
+            @include border-radius-top(0);
+            @include border-radius-bottom($borderRadius);
+        }
+    }
+    
+    .p-tabview {
+        padding: 0;
+        
+        &.p-tabview-top, &.p-tabview-bottom, &.p-tabview-left, &.p-tabview-right {
+            border: 0 none;
+            background: transparent;
+            
+            .p-tabview-nav {
+                padding: 0;
+                border: 0 none;
+                background: $contentBgColor;
+                @include border-radius(0);
+                
+                li {
+                    position: static;
+                    @include border-radius(0);
+                    margin: 0;
+                    box-sizing: border-box;
+                    background: $contentBgColor;
+                    border: 1px solid transparent;
+                    
+                    a {
+                        padding: $headerPadding;
+                        color: $primaryColor;
+                        font-weight: normal;
+                        
+                        .p-tabview-left-icon {
+                            margin-right: .25em;
+                        }
+                        
+                        .p-tabview-right-icon {
+                            margin-left: .25em;
+                        }
+                    }
+                    
+                    .p-tabview-close {
+                        margin-top: .65em;
+                    }
+                    
+                    &:not(.p-highlight):not(.p-disabled):hover {
+                        background-color: $headerBgColor;
+                        
+                        .pi-times {
+                            color: $headerIconHoverColor;
+                        }
+                    }
+                                        
+                    &.p-highlight {
+                        border: 1px solid $headerBorderColor;
+                        background-color: #ffffff;
+                    }
+                }
+            }
+        }
+        
+        
+        &.p-tabview-top {
+            .p-tabview-nav {
+                li {
+                    margin-right: 2px;
+                    border-bottom: 1px solid $headerBorderColor;
+                    @include border-radius-top($borderRadius);
+                    @include border-radius-bottom(0);
+                    
+                    &.p-highlight {
+                        border-bottom-color: $contentBgColor;
+                    }
+                }
+            }
+            
+            .p-tabview-panels {
+                border-top: 1px solid $contentBorderColor;
+                margin-top: -1px;
+            }
+        }
+        
+        &.p-tabview-left,&.p-tabs-right {
+            .p-tabview-nav {
+                width: 25%;
+                
+                li {
+                    width: 100%;
+                }
+            }  
+        }
+        
+        &.p-tabview-left {
+            .p-tabview-nav {
+                li {
+                    margin-bottom: 2px;
+                    border-right: 1px solid $headerBorderColor;
+                    @include border-radius-left($borderRadius);
+                    @include border-radius-right(0);
+                    
+                    &.p-highlight {
+                        border-right-color: $contentBgColor;
+                    }
+                }
+            }
+                        
+            .p-tabview-panels {
+                position: relative;
+                left: -1px;
+                border-left: 1px solid $contentBorderColor;
+            }
+        }
+        
+        &.p-tabview-right {
+            .p-tabview-nav {
+                li {
+                    margin-bottom: 2px;
+                    border-left: 1px solid $headerBorderColor;
+                    @include border-radius-right($borderRadius);
+                    @include border-radius-left(0);
+                    
+                    &.p-highlight {
+                        border-left-color: $contentBgColor;
+                    }
+                }
+            }
+                        
+            .p-tabview-panels {
+                position: relative;
+                right: -1px;
+                border-right: 1px solid $contentBorderColor;
+            }
+        }
+        
+        &.p-tabview-bottom {
+            .p-tabview-nav {
+                li {
+                    margin-right: 2px;
+                    border-top-color: transparent;    
+                    @include border-radius-bottom($borderRadius);
+                    @include border-radius-top(0);
+                    
+                    &.p-highlight {
+                        border-top-color: $contentBgColor; 
+                    }
+                }
+            }
+            
+            .p-tabview-panels {
+                border-bottom: 1px solid $contentBorderColor;
+                margin-bottom: 1px;
+            }  
+        }
+        
+        .p-tabs-panel {
+            padding: $contentPadding;
+        }
+    }
+    
+    .p-toolbar {
+        @include header();
+        @include corner-all();
+        background-color: $headerBgColor;
+        border-color: $contentBorderColor;
+        padding: $headerPadding;
+
+        .p-toolbar-separator {
+            vertical-align: middle;
+            margin: 0 .5em;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        .p-panelgrid {
+            .p-grid-responsive {
+                .p-grid-row {
+                    border: 0 none;
+                }
+            }
+        }
+    }
+}

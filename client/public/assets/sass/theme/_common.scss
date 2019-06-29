@@ -1,0 +1,44 @@
+body {
+    .p-component {
+        font-family: $fontFamily;
+        text-decoration: none;
+    }
+
+    .p-highlight {
+        background-color: $highlightBgColor;
+        color: $primaryTextColor;
+    }
+    
+    .p-error {
+        border: solid 1px $errorBorderColor;
+    }
+    
+    .p-disabled,
+    .p-component:disabled {
+        background-color: $disabledBgColor;
+        cursor: default !important;
+        
+        * {
+            cursor: default !important;
+        }
+    }
+
+    .p-component-overlay {
+        background-color: #424242;
+        @include opacity(.7);
+    }
+    
+    a {
+        color: darken($primaryColor,10%);
+        text-decoration: none;
+        
+        &:hover {
+            color: darken($primaryColor,10%);
+        }
+    }
+
+    .ajax-loader {
+        font-size: 28px;
+        color: $primaryColor;
+    }
+}

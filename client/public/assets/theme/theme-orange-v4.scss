@@ -1,0 +1,25 @@
+$primaryColor:#FD7E14;
+$primaryTextColor:#ffffff;
+$inputFocusBorderColor:#FEBE89;
+$inputFocusBorderShadowColor:rgba(253,126,20,.25);
+$highlightBgColor:#FD7E14;
+$highlightTextColor:#ffffff;
+$headerBgColor:#f5f5f5;
+$headerHoverBgColor:#dcdcdc;
+$headerHoverBorderColor:#c4c4c4;
+$headerTextColor:#292B2C;
+$headerBorderColor:#dddddd;
+$headerIconColor:#999999;
+$headerIconHoverColor:#bd9090;
+$datableEvenRowBgColor:#f9f9f9;
+$datatableHoverBgColor:#f5f5f5;
+$buttonTextColor:#ffffff;
+$buttonBgColor:#FD7E14;
+$buttonBorderColor:#FD7E14;
+$buttonHoverBgColor:#DE6907;
+$buttonHoverBorderColor:#CB5C00;
+$buttonActiveBgColor:#CB5C00;
+$buttonActiveBorderColor:#904100;
+$buttonFocusBorderShadow:rgba(253,126,20,.5);
+
+@import '../sass/theme-v4/_theme';

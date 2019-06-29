@@ -1,0 +1,80 @@
+@import '../variables/common';
+
+/* Icons */
+$iconFontSize:14px;
+$iconWidth:16px;
+
+/* Error */
+$errorColor:#a94442;
+$disabledColor:#eeeeee;
+
+/*  Invalid Input */
+$errorBorderColor:#b94a48;
+
+/* Headers */
+$headerPadding:10px 15px;
+
+/* Contents */
+$contentPadding:15px;
+$contentBorderColor:#dddddd;
+$contentBgColor:#ffffff;
+$contentLineHeight:1.43;
+
+/* Forms */
+$inputBgColor:#ffffff;
+$inputPadding:6px 12px;
+$inputBorderColor:#cccccc;
+$inputHoverBorderColor:#cccccc;
+$inputTextColor:#495057;
+
+//groups
+$inputGroupBorderColor:#cccccc;
+$inputGroupBgColor:#ffffff;
+$inputGroupTextColor:$textColor;
+$inputGroupIconColor:$textSecondaryColor;
+$inputGroupAddonMinWidth:2*$fontSize;
+$checkboxWidth:20px;
+$checkboxHeight:20px;
+
+/* Buttons */
+$buttonPadding: 0.429em 0.857em;
+$buttonIconOnlyPadding: 0.429em;
+$buttonTextColor:#ffffff;
+$toggleButtonBgColor:#ffffff;
+$toggleButtonBorderColor:#cccccc;
+$toggleButtonHoverBgColor:#e6e6e6;
+$toggleButtonHoverBorderColor:#adadad;
+
+/* List Items */
+$listPadding:6px 0;
+$listItemPadding:6px 20px;
+$listItemHoverBgColor:#f5f5f5;
+$listItemHoverTextColor:#292B2C;
+
+/* Messages */
+$infoMessageBgColor:#d9edf7;
+$infoMessageBorderColor:#bce8f1;
+$infoMessageTextColor:#31708f;
+$warnMessageBgColor:#fcf8e3;
+$warnMessageBorderColor:#faebcc;
+$warnMessageTextColor:#8a6d3b;
+$errorMessageBgColor:#f2dede;
+$errorMessageBorderColor:#ebccd1;
+$errorMessageTextColor:#a94442;
+$fatalMessageBgColor:#999999;
+$fatalMessageBorderColor:#6b6b6b;
+$fatalMessageTextColor:#ffffff;
+$successMessageBgColor:#dff0d8;
+$successMessageBorderColor:#d6e9c6;
+$successMessageTextColor:#3c763d;
+
+/* Overlays */
+$overlayBorderColor:#cccccc;
+
+/* Data */
+$datatableCellBorderColor:#dddddd;
+$datatableCellPadding:8px;
+$paginatorBgColor:#ffffff;
+
+/* Panel */
+$panelContentBorderColor:#DCE1E7;

@@ -1,0 +1,605 @@
+body {
+    .p-menu-separator {
+        border-width: 1px 0 0 0;
+        border-color: $dividerColor;
+    }
+    
+    .p-breadcrumb {
+        @include header();
+        @include corner-all();
+        background-color: $headerBgColor;
+        border: 0 none;
+        padding: .5em 1em;
+        
+        ul {
+            li {
+                float: none;
+                display: inline-block;
+                vertical-align: middle;
+                
+                .p-menuitem-link {
+                    margin: 0;
+                    position: relative;
+                    top: -1px;
+                    color: $primaryColor;
+                    font-weight: normal;
+                }
+                
+                &.p-breadcrumb-chevron {
+                    font-size: $fontSize + 4;
+                    margin: -2px 6px 0 6px;
+                    color: $textSecondaryColor;
+
+                    &:before {
+                        content: '/';
+                    }
+                }
+                
+                &:first-child {
+                    font-size: $fontSize + 2;
+                    
+                    &.pi-home {
+                        color: $primaryColor;
+                        margin: 0;
+                        font-size: 15px;
+                        
+                        span {
+                            display: none;
+                        }
+                    }
+                }
+                
+                &:last-child {
+                    .p-menuitem-link {
+                        color: $textSecondaryColor;
+                    }
+                }
+            }
+        }
+    }
+    
+    .p-steps {
+        position: relative;
+        
+        .p-steps-item {
+            background-color: transparent;
+            text-align: center;
+                        
+            .p-menuitem-link {
+                display: inline-block;
+                text-align: center;
+                background-color: transparent;
+                overflow: hidden;
+                
+                .p-steps-number {
+                    display: inline-block;
+                    background-color: $primaryColor;
+                    @include border-radius(50%);
+                    padding: 0.643em 0 0 0;
+                    font-size: 1em;
+                    color: $primaryTextColor;
+                    position: relative;
+                    top: 1em;
+                    margin-bottom: 1em;
+                    width: 2.5em;
+                    height: 2.5em;
+                    border: 1px solid lighten($primaryColor,15%);
+                }
+                
+                .p-steps-title {
+                    display: block;
+                    margin-top: 0.45em;
+                    color: $textSecondaryColor;
+                }
+            }
+            
+            &.p-disabled {
+                @include opacity(1);
+                
+                .p-steps-number {
+                    background-color: $disabledColor;
+                    border-color: $contentBorderColor;
+                    color: $textColor;
+                }
+            }
+            
+            &.p-highlight {
+                .p-steps-number {
+                    background-color: $primaryColor;
+                }
+                
+                .p-steps-title {
+                    font-weight: 700;
+                    color: $textColor;
+                }
+            }
+            
+            &:last-child {
+                .p-menuitem-link {
+                    display: block;
+                }
+            }
+        }
+
+        &:before {
+            content:' ';
+            border: 1px solid $contentBorderColor;
+            width: 100%;
+            top: 45%;
+            left: 0;
+            display: block;
+            position: absolute;
+        }
+    }
+
+    .p-menu .p-menuitem-link,
+    .p-menubar .p-menuitem-link,
+    .p-tieredmenu .p-menuitem-link,
+    .p-contextmenu .p-menuitem-link,
+    .p-megamenu .p-menuitem-link,
+    .p-slidemenu .p-menuitem-link {
+        padding: $listItemPadding;
+        color: $textColor;
+        font-weight: normal;
+        @include border-radius(0);
+
+        .p-menuitem-text {
+            color: $textColor;
+        }
+
+        .p-menuitem-icon {
+            color: $textColor;
+            margin-right:  .125em;
+            font-size: 1.25em;
+        }
+
+        .p-submenu-icon {
+            color: $textColor;
+        }
+
+        &:hover {
+            @include menu-item-hover();
+        }
+    }
+
+    .p-menu {
+        @include content();
+        @include corner-all();
+        padding: .357em 0;
+        @include border-radius($borderRadius);
+
+        .p-menuitem {
+            margin: 0;
+        }
+
+        &.p-menu-overlay {
+            @include content();
+            @include overlay();
+        }
+
+        .p-submenu-header {
+            @include header();
+            margin: 0 0 1px 0;
+            @include border-radius(0);
+            border: 0 none;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: 700;
+            padding: $listItemPadding;
+            background-color: $dividerColor;
+        }
+
+        .p-menu-separator {
+            height: 1px;
+            background-color: $dividerColor;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    .p-menubar {
+        @include content();
+        @include corner-all();
+        padding: .357em 0;
+        @include border-radius($borderRadius);
+        background-color: $headerBgColor;
+
+        .p-menubar-root-list {
+            > .p-menuitem {
+                > .p-menuitem-link {
+                    padding: 15px;
+                    .p-menuitem-text {
+                        color: $textSecondaryColor;
+                    }
+
+                    .p-menuitem-icon {
+                        color: $textSecondaryColor;
+                    }
+
+                    .p-submenu-icon {
+                        color: $textSecondaryColor;
+                    }
+
+                    &:hover {
+                        .p-menuitem-text {
+                            color: $textColor;
+                        }
+
+                        .p-menuitem-icon {
+                            color: $textColor;
+                        }
+
+                        .p-submenu-icon {
+                            color: $textColor;
+                        }
+                    }
+                }
+            }
+        }
+
+        .p-submenu-list {
+            @include content();
+            @include corner-all();
+            padding: .5em 0;
+            @include overlay();
+
+            .p-menuitem {
+                margin: 0;
+            }
+
+            .p-menu-separator {
+                border: solid $dividerColor;
+                border-width: 1px 0 0 0;
+            }
+        }
+
+        .p-menuitem {
+            margin: 0;
+
+            &.p-menuitem-active {
+                > .p-menuitem-link {
+                    @include menu-item-hover();
+                }
+            }
+        }
+    }
+
+    .p-contextmenu {
+        @include content();
+        @include corner-all();
+        @include border-radius($borderRadius);
+        @include overlay();
+        padding: .5em 0;
+
+        .p-submenu-list {
+            @include content();
+            @include corner-all();
+            padding: .5em 0;
+            @include overlay();
+        }
+
+        .p-menuitem {
+            margin: 0;
+
+            .p-menuitem-link {
+                .p-submenu-icon {
+                    right: 1.429em;
+                }
+            }
+
+            &.p-menuitem-active {
+                > .p-menuitem-link {
+                    @include menu-item-hover();
+                }
+            }
+        }
+
+        .p-menu-separator {
+            border: solid $dividerColor;
+            border-width: 1px 0 0 0;
+        }
+    }
+
+    .p-tieredmenu {
+        @include content();
+        @include corner-all();
+        @include border-radius($borderRadius);
+        padding: .5em 0;
+
+        .p-submenu-list {
+            @include content();
+            @include corner-all();
+            padding: .5em 0;
+            @include overlay();
+        }
+
+        .p-menuitem {
+            margin: 0;
+
+            .p-menuitem-link {
+                .p-submenu-icon {
+                    right: 1.429em;
+                }
+            }
+
+            &.p-menuitem-active {
+                > .p-menuitem-link {
+                    @include menu-item-hover();
+                }
+            }
+        }
+
+        .p-menu-separator {
+            border: solid $dividerColor;
+            border-width: 1px 0 0 0;
+        }
+
+        &.p-menu-overlay {
+            @include content();
+            @include overlay();
+        }
+    }
+
+    .p-slidemenu {
+        @include content();
+        @include corner-all();
+        padding: .5em 0;
+        @include border-radius($borderRadius);
+
+        .p-submenu-list {
+            @include content();
+            @include corner-all();
+            padding: 0;
+            border: 0 none;
+        }
+
+        .p-menuitem {
+            margin: 0;
+
+            .p-menuitem-link {
+                .p-submenu-icon {
+                    right: 1.429em;
+                }
+            }
+
+            &.p-menuitem-active {
+                > .p-menuitem-link {
+                    @include menu-item-hover();
+                }
+            }
+        }
+
+        .p-slidemenu-backward {
+            background-color: $dividerColor;
+            color: $textColor;
+            padding: $headerPadding;
+            @include border-radius(0);
+            border: 0 none;
+            font-weight: bold;
+
+            &:hover {
+                background-color: darken($dividerColor, 10%);
+            }
+        }
+
+        .p-menu-separator {
+            border: solid $dividerColor;
+            border-width: 1px 0 0 0;
+        }
+
+        &.p-menu-overlay {
+            @include overlay();
+        }
+    }
+
+    .p-megamenu {
+        @include content();
+        @include corner-all();
+        padding: .357em 0;
+        @include border-radius($borderRadius);
+        background-color: $headerBgColor;
+
+        .p-megamenu-submenu-header {
+            @include header();
+            margin: 0 0 1px 0;
+            @include border-radius(0);
+            border: 0 none;
+            width: 100%;
+            box-sizing: border-box;
+            padding: $listItemPadding;
+        }
+
+        .p-megamenu-panel {
+            @include content();
+            @include corner-all();
+            padding: .5em;
+            @include overlay();
+        }
+
+
+        .p-megamenu-root-list {
+            > .p-menuitem {
+                > .p-menuitem-link {
+                    padding: 15px;
+                    .p-menuitem-text {
+                        color: $textSecondaryColor;
+                    }
+
+                    .p-menuitem-icon {
+                        color: $textSecondaryColor;
+                    }
+
+                    .p-submenu-icon {
+                        color: $textSecondaryColor;
+                    }
+
+                    &:hover {
+                        .p-menuitem-text {
+                            color: $textColor;
+                        }
+
+                        .p-menuitem-icon {
+                            color: $textColor;
+                        }
+
+                        .p-submenu-icon {
+                            color: $textColor;
+                        }
+                    }
+                }
+            }
+        }
+
+        .p-menuitem {
+            margin: 0;
+
+            .p-menuitem-link {
+                .p-submenu-icon {
+                    right: 1.429em;
+                }
+            }
+
+            &.p-menuitem-active {
+                > .p-menuitem-link {
+                    @include menu-item-hover();
+                }
+            }
+        }
+
+        &.p-megamenu-vertical {
+            .p-megamenu-root-list {
+                > .p-menuitem {
+                    > .p-menuitem-link {
+                        > .p-submenu-icon {
+                            right: 1.429em;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .p-tabmenu {
+        @include content();
+        @include corner-all();
+        padding: 0;
+        background: $headerBgColor;
+        border: 1px solid $headerBorderColor;
+        
+        .p-tabmenu-nav {
+            @include header();
+            padding: 0;
+            border: 0 none;
+            @include border-radius(0);
+
+            &:after{
+                content: "";
+                display: table;
+                clear: both;
+            }
+            
+            .p-tabmenuitem {
+                position: static;
+                @include border-radius(0);
+                margin: 0;
+                box-sizing: border-box;
+                border: 1px solid transparent;
+                
+                .p-menuitem-link {
+                    padding: 15px;
+                    color: $textSecondaryColor;
+                    font-weight: normal;
+                    
+                    .p-menuitem-icon, .p-menuitem-text {
+                        display: inline-block;
+                        vertical-align: middle;
+                        float: none;
+                    }
+                    
+                    .p-menuitem-icon {
+                        color: $headerIconColor;
+                        font-size: 1.5em;
+                    }
+                }
+                
+                &:not(.p-highlight):not(.p-disabled):hover {
+                    .p-menuitem-link {
+                        color: $textColor;
+                    }
+                }
+                
+                &.p-highlight {
+                    background-color: $dividerColor;
+                }
+            }
+        }
+    }
+        
+    .p-panelmenu {
+        .p-panelmenu-header {
+            background-color: $contentBgColor;
+            padding: 0;
+            border: 1px solid $contentBorderColor;
+            font-size: $fontSize;
+            color: $textColor;
+            margin-top: 0.357em;
+            @include border-radius($borderRadius);
+                        
+            a {
+                padding: $headerPadding;
+                color: $textColor;
+                font-weight: bold;
+                
+                .p-menuitem-text {
+                    line-height: $fontSize + 2;
+                }
+            }
+            
+            &:not(.p-highlight):hover {
+                background-color: $headerHoverBgColor;
+            }
+            
+            &.p-highlight {
+                border-bottom-color: $contentBgColor;
+                @include border-radius-bottom(0);
+            }
+
+            .p-menuitem-icon {
+                font-size: 1.5em;
+            }
+        }
+        
+        .p-panelmenu-panel {
+            margin-top: 2px;
+            
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+        
+        .p-panelmenu-content {
+            @include content();
+            padding: .2em 0;
+            border-top: 0;
+
+            .p-menuitem {
+                @include corner-all();
+
+                .p-menuitem-link {
+                    padding: $listItemPadding;
+                    color: $textColor;
+                    @include transition(background-color );
+
+                    &:hover {
+                        @include list-item-hover();
+                    }
+
+                    .p-menuitem-text {
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+}
