@@ -47,7 +47,9 @@ class AppTopbar extends Component {
 
         return <div className="topbar clearfix">
             <div className="topbar-left">
-                <img alt="Logo" src="assets/layout/images/logo.png" className="topbar-logo"/>
+                <img alt="Logo" src="assets/layout/images/logo.png" className="topbar-logo"  style = {{
+                        height: '45px'
+                    }}/>
             </div>
 
             <div className="topbar-right">

@@ -34,7 +34,7 @@ User.prototype.generateToken = function() {
 };
 
 User.generatePassword = function() {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production") {
         return "123456";
     }
     return Math.random()

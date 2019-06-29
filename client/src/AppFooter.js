@@ -5,7 +5,9 @@ export class AppFooter extends Component {
         return (
             <div className="layout-footer">
                 <span className="footer-text-left">
-                    <img alt="Logo" src="assets/layout/images/logo-dark.png" />
+                    <img alt="Logo" src="assets/layout/images/logo.png" style = {{
+                        height: '45px'
+                    }}/>
                 </span>
                 <span className="footer-text-right">
                     <button className="p-link">
