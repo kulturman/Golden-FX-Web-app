@@ -66,12 +66,14 @@ router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req 
     let transaction = await sequelize.transaction();
     try {
         const createdUser = await User.create(user);
-        const misc = await Misc.findOne();
-        await misc.update({
-            fundCurrentAmount : +misc.fundCurrentAmount + +user.amount,
-            fundAmount : +misc.fundAmount + +user.amount,
-        })
+        if(!user.isAdmin) {
+            const misc = await Misc.findOne();
+            await misc.update({
+                fundCurrentAmount : +misc.fundCurrentAmount + +user.amount,
+                fundAmount : +misc.fundAmount + +user.amount,
+            })
         transaction.commit();
+        }
         return res.send(createdUser);
     }
 
