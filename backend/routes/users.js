@@ -43,7 +43,7 @@ router.post('/login' , loginValidador() , async (req , res) => {
 router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req , res) => {
     let errorResponse = getErrors(req);
     let email = req.body.email || 'null';
-    let user = await User.findOne({ where: { email } });
+    let user = await User.findOne({ where: { email , deleted: false } });
 
     if(user) {
         errorResponse.email = ['Cette adresse email existe déjà'];
