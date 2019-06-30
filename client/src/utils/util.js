@@ -64,9 +64,13 @@ const makeRequest = (url , method , data = {} , callback = null , isFetchRequest
                 callback(response.data , dispatch);
         })
         .catch(err => {
+            let errors = null;
+            if(err.response) {
+                errors =  err.response.data;
+            }
             dispatch({
                 type: actionTypes.FETCH_RESOURCE_FAIL,
-                payload: {errors: err.response.data}
+                payload: {errors}
             })
         })
     }

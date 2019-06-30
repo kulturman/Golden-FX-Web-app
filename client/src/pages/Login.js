@@ -58,7 +58,7 @@ class Login extends Component {
                                     style={{ textAlign: "left" }}
                                 >
                                     <h2 className="welcome-text">
-                                        Bienvenue sur le tableau de bord de GoldenFX
+                                        Bienvenue sur le tableau de bord du PFM
                                     </h2>
                                     <span className="guest-sign-in">
                                         Connectez vous

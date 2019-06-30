@@ -49,7 +49,7 @@ class Dashboard extends Component {
                         <div className="p-grid overview-box overview-box-4">
                             <div className="overview-box-title">
                                 <i className="fa fa-user" />
-                                <span>Investisseurs</span>
+                                <span>Partenaires</span>
                             </div>
                             <div className="overview-box-count">
                                 {dashboard.usersCount}
@@ -82,10 +82,10 @@ class Dashboard extends Component {
                     </div>
                     {
                         !user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-2">
-                            <div className="p-grid overview-box overview-box-2">
+                            <div className="p-grid overview-box overview-box-5">
                                 <div className="overview-box-title">
                                     <i className="fa fa-money" />
-                                    <span>Investissement initial</span>
+                                    <span>Capital initial</span>
                                 </div>
                                 <div className="overview-box-count">
                                     {formatMoney(dashboard.userFundAmount)}
@@ -114,7 +114,7 @@ class Dashboard extends Component {
                     }
                     {
                         !user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-2">
-                            <div className="p-grid overview-box overview-box-3">
+                            <div className="p-grid overview-box overview-box-2">
                                 <div className="overview-box-title">
                                     <i className="fa fa-bank" />
                                     <span>Vos bénéfices</span>
@@ -220,7 +220,7 @@ class Dashboard extends Component {
                             }
                         >
                             <ul>
-                                {dashboard.lastVariations.map(variation => (
+                                {dashboard.lastVariations && dashboard.lastVariations.map(variation => (
                                     <li key={variation.id} className="clearfix">
                                         <div className="contact-info">
                                             <span className="name">

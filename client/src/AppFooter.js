@@ -10,8 +10,11 @@ export class AppFooter extends Component {
                     }}/>
                 </span>
                 <span className="footer-text-right">
-                    <button className="p-link">
+                    <button
+                        onClick={() => window.location.replace('https://web.facebook.com/monpfm/')}
+                        className="p-link">
                         <i className="fa fa-facebook" />
+                        
                     </button>
                     <button className="p-link">
                         <i className="fa fa-twitter" />

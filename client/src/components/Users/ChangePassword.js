@@ -64,6 +64,7 @@ class ChangePassword extends Component {
                                         placeholder="Ancien mot de passe"
                                         value={this.state.password}
                                         onChange={this.onChange}
+                                        type="password"
                                         name='password'
                                     />
                                     {errors && errors.password ? (
@@ -78,6 +79,7 @@ class ChangePassword extends Component {
                                         placeholder="Nouveau mot de passe"
                                         value={this.state.newPassword}
                                         onChange={this.onChange}
+                                        type="password"
                                         name='newPassword'
                                     />
                                     {errors && errors.newPassword ? (
@@ -93,6 +95,7 @@ class ChangePassword extends Component {
                                         value={this.state.passwordConfirmation}
                                         onChange={this.onChange}
                                         name='passwordConfirmation'
+                                        type="password"
                                     />
                                     {errors && errors.passwordConfirmation ? (
                                         <Message

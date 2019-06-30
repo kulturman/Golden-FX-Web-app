@@ -27,7 +27,7 @@ const authenticateUser = payload => {
 
 const registerUser = payload => {
     return makeRequest('/users/register' , 'POST' , payload , (data , dispatch) => {
-        dispatch({type: actionTypes.FETCH_RESOURCE_SUCCESS});
+        dispatch({type: actionTypes.FETCH_RESOURCE_SUCCESS , payload: data});
     } , false )
 }
 

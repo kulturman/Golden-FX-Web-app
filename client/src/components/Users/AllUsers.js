@@ -7,6 +7,7 @@ import Spinner from "../UI/Spinner/Spinner";
 import { formatDate , formatMoney } from "../../utils/util";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
+import * as util from "../../utils/util";
 
 class AllUsers extends Component {
 
@@ -14,6 +15,7 @@ class AllUsers extends Component {
         super();
         this.dateTemplate = this.dateTemplate.bind(this);
         this.isAdminTemplate = this.isAdminTemplate.bind(this);
+        this.onDeleteHandler = this.onDeleteHandler.bind(this);
     }
 
     dateTemplate({ createdAt }) {
@@ -32,6 +34,19 @@ class AllUsers extends Component {
         this.props.onFetchUsers();
     }
 
+    componentDidUpdate(prevProps) {
+        const success = this.props.success;
+        if (success && prevProps.success !== success) {
+            util.successDialog("L'utilisateur a été supprimé avec succès");
+        }
+    }
+
+    onDeleteHandler() {
+        util.questionDialog('Voulez vous vraiment supprimer cet utilisateur?' , () => {
+            this.props.onDeleteUser(this.state.selectedItem.id);
+        });
+    }
+
     render() {
         let footer = (
             <div className="p-clearfix" style={{ width: "100%" }}>
@@ -46,6 +61,14 @@ class AllUsers extends Component {
                     label="Modifier"
                     icon="pi pi-pencil"
                     disabled={!this.state.selectedItem}
+                    onClick={() => this.props.history.push(`/editer-un-utilisateur/${this.state.selectedItem.id}`)}
+                />
+                <Button
+                    style={{ float: "left" }}
+                    label="Supprimer"
+                    icon="pi pi-bin"
+                    disabled={!this.state.selectedItem}
+                    onClick={this.onDeleteHandler}
                 />
             </div>
         );
@@ -67,7 +90,6 @@ class AllUsers extends Component {
                     }}
                 >
                     <Column selectionMode="single" style={{ width: "3em" }} />
-
                     <Column field="id" header="Id" sortable={true} />
                     <Column field="name" header="Nom" />
                     <Column field="forename" header="Prénom(s)" />
@@ -114,13 +136,15 @@ class AllUsers extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
+        success: state.fetchResource.success,
         users: state.user.users
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchUsers: () => dispatch(actions.fetchUsers())
+        onFetchUsers: () => dispatch(actions.fetchUsers()),
+        onDeleteUser: id => dispatch(actions.deleteUser(id))
     };
 };
 export default connect(

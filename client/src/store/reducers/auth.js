@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     user: null,
-    token: null
+    token: null,
+    registeredUser: null
 }
 
 const authReducer = (state = initialState , action) => {
@@ -14,6 +15,11 @@ const authReducer = (state = initialState , action) => {
                 ...state,
                 user: action.payload.user,
                 token: action.payload.token
+            }
+        case actionTypes.SET_REGISTERED_USER:
+            return {
+                ...state,
+                registeredUser: action.payload
             }
         case actionTypes.LOGOUT :
             return {

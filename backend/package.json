@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",
@@ -9,6 +10,8 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "mysql2": "^1.6.5",
+    "nodemailer": "^6.2.1",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "sequelize": "^5.8.7"
   },
   "name": "backend",

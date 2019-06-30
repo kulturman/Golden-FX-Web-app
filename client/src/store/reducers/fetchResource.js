@@ -4,7 +4,8 @@ const initialState = {
     loading: false,
     errors: {},
     fetchSuccess: false,
-    success: false
+    success: false,
+    successMessage: ''
 }
 
 const fetchresourceReducer = (state = initialState , action) => {
@@ -39,12 +40,18 @@ const fetchresourceReducer = (state = initialState , action) => {
                 fetchSuccess: false
             };
         case actionTypes.FETCH_RESOURCE_SUCCESS:
+            let successMessage = '';
+            const { payload } = action;
+            if(payload && payload.message) {
+                successMessage = payload.message;
+            }
             return {
                 ...state,
                 loading: false,
                 errors: {},
                 success,
-                fetchSuccess
+                fetchSuccess,
+                successMessage
             };
         default:
             return state;

@@ -12,3 +12,8 @@
 .loss {
     background: red;
 }
+
+.overview-box-stats {
+    font-weight: bold;
+    /*font-family: 'Rubik Mono One', sans-serif*/
+}

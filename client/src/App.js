@@ -25,6 +25,7 @@ import FundVariations from "./components/Funds/FundVariations";
 import AddDayliEvolution from "./components/Funds/AddDayliEvolution";
 import UserFundVariations from "./components/Funds/UserFundVariations";
 import ChangePassword from "./components/Users/ChangePassword";
+import UpdateUser from "./components/Users/UpdateUser";
 
 class App extends Component {
     constructor(props) {
@@ -392,6 +393,16 @@ class App extends Component {
                             path="/nouvel-utilisateur"
                             exact
                             component={NewUser}
+                        />
+
+                        <PrivateRoute
+                            isAllowed={
+                                user
+                            }
+                            redirectTo="/"
+                            path="/editer-un-utilisateur/:id"
+                            exact
+                            component={UpdateUser}
                         />
 
                         <PrivateRoute

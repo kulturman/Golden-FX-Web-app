@@ -2,24 +2,33 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Checkbox } from "primereact/checkbox";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/auth";
+import * as userActions from "../../store/actions/user";
 import { Message } from "primereact/message";
 import Spinner from "../UI/Spinner/Spinner";
 import * as util from "../../utils/util";
 
-class NewUser extends Component {
+class UpdateUser extends Component {
     onSubmit = e => {
         e.preventDefault();
-        this.props.onRegisterUser(this.state);
+        this.props.onUserUpdate(this.props.user.id , this.state);
     };
 
-    componentDidUpdate(prevProps) {// Le mot de passe est : ${this.props.registeredUser.password}
-        const { successMessage } = this.props;
-        if (successMessage && prevProps.successMessage !== successMessage) {
-            util.successDialog(successMessage);
+    componentDidUpdate(prevProps) {
+        const success = this.props.success;
+        if (success && prevProps.success !== success) {
+            util.successDialog("L'utilisateur a été édité avec succès");
         }
+        if(this.props.user !== prevProps.user) {
+            this.setState({
+                ...this.props.user
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.props.onFecthUser(this.props.match.params.id);
     }
 
     state = {
@@ -29,7 +38,6 @@ class NewUser extends Component {
         address: "",
         profession: "",
         phone: "",
-        isAdmin: false,
         amount: ""
     };
 
@@ -37,10 +45,6 @@ class NewUser extends Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-    };
-
-    onCheckboxChange = e => {
-        this.setState({ isAdmin: e.checked });
     };
 
     render() {
@@ -63,7 +67,7 @@ class NewUser extends Component {
                                 class="breadcrumb-item active"
                                 aria-current="page"
                             >
-                                Nouvel utilisateur
+                                Modifier un utilisateur
                             </li>
                         </ol>
                     </nav>
@@ -72,7 +76,7 @@ class NewUser extends Component {
                 <div className="p-col-12 p-lg-6 p-offset-3">
                     <form onSubmit={this.onSubmit}>
                         <div className="card card-w-title">
-                            <h1>Ajouter un utilisateur</h1>
+                            <h1>Editer un utilisateur</h1>
                             <div className=" p-lg-12">
                                 <div className="p-lg-12">
                                     <InputText
@@ -174,15 +178,6 @@ class NewUser extends Component {
                                         />
                                     ) : null}
                                 </div>
-                                <div className="p-lg-12">
-                                    <Checkbox
-                                        onChange={this.onCheckboxChange}
-                                        checked={this.state.isAdmin}
-                                    />
-                                    <label className="p-checkbox-label">
-                                        Administrateur ?
-                                    </label>
-                                </div>
 
                                 <div className="p-lg-12">
                                     <Button
@@ -205,18 +200,19 @@ const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
         success: state.fetchResource.success,
-        successMessage: state.fetchResource.successMessage,
         errors: state.fetchResource.errors,
-        registeredUser: state.auth.registeredUser
+        user: state.user.editingUser
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRegisterUser: payload => dispatch(actions.registerUser(payload))
+        onRegisterUser: payload => dispatch(actions.registerUser(payload)),
+        onFecthUser: payload => dispatch(userActions.getUser(payload)),
+        onUserUpdate: (id , payload) => dispatch(userActions.updateUser(id , payload))
     };
 };
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(NewUser);
+)(UpdateUser);

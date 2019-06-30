@@ -46,10 +46,17 @@ class AppTopbar extends Component {
         let topbarItemsClassName = classNames('topbar-items fadeInDown', {'topbar-items-visible': this.props.topbarMenuActive});
 
         return <div className="topbar clearfix">
-            <div className="topbar-left">
+            <div className="topbar-left" style={{
+                width: '600px'
+            }}>
                 <img alt="Logo" src="assets/layout/images/logo.png" className="topbar-logo"  style = {{
-                        height: '45px'
+                        height: '60px',
+                        marginTop: '-20px'
                     }}/>
+                <span style={{
+                    fontSize: '1.4rem',
+                    'font-family': "'Rubik Mono One', sans-serif"
+                }}>Private Fund Management</span>
             </div>
 
             <div className="topbar-right">

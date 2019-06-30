@@ -30,7 +30,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "watch-scss": "node-sass public/assets/theme/theme-amber-v4.scss public/assets/theme/theme-amber-v4.css -w"
+        "watch-theme": "node-sass public/assets/theme/theme-amber-v4.scss public/assets/theme/theme-amber-v4.css -w",
+        "watch-layout": "node-sass public/assets/layout/css/layout-sunkist-v4.scss public/assets/layout/css/layout-sunkist-v4.css -w"
     },
     "eslintConfig": {
         "extends": "react-app"

@@ -16,7 +16,8 @@ const User = sequelize.define(
         profession: DataTypes.STRING,
         isAdmin: DataTypes.BOOLEAN,
         amount: DataTypes.DOUBLE,
-        currentAmount: DataTypes.DOUBLE
+        currentAmount: DataTypes.DOUBLE,
+        deleted: DataTypes.BOOLEAN
     },
     {}
 );
@@ -34,7 +35,7 @@ User.prototype.generateToken = function() {
 };
 
 User.generatePassword = function() {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV === "development") {
         return "123456";
     }
     return Math.random()
@@ -72,14 +73,14 @@ User.updateUsersCurrentAmount = async variation => {
     if (variation.loss) {
         sql = `UPDATE users SET currentAmount = currentAmount - (currentAmount * ${
             variation.percentage
-        } / 100)`;
+        } / 100) WHERE deleted=0`;
     } else {
         if (variation.realPercentage !== 0) {
-            sql = `UPDATE users SET currentAmount = amount`;
+            sql = `UPDATE users SET currentAmount = amount WHERE deleted=0`;
         } else {
             sql = `UPDATE users SET currentAmount = currentAmount + (currentAmount * ${
                 variation.percentage
-            } / 100)`;
+            } / 100) WHERE deleted=0`;
         }
     }
     return await sequelize.query(sql, {
@@ -91,7 +92,7 @@ User.updateUsersFundVariationsAndAmount = async variation => {
     let user;
     let transaction = await sequelize.transaction();
     const users = await User.findAll({
-        where: { isAdmin: false }
+        where: { isAdmin: false , deleted: false }
     });
 
     try {
@@ -117,7 +118,6 @@ User.updateUsersFundVariationsAndAmount = async variation => {
                         (variation.percentage * user.currentAmount) / 100;
                 }
             }
-            console.log('variation' , variation);
             userFundVariations.push({
                 fundVariationId: variation.id,
                 userId: user.id,
