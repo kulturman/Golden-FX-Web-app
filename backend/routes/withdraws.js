@@ -38,6 +38,7 @@ router.get('/my-withdrawals' , [ auth ] , async (req , res) => {
 
 router.get('/state/waiting' , [ auth , isAdmin ] , async (req , res) => {
     const withdrawals = await Withdrawal.findAll( {
+            where: { granted: false },
             include: [
                 { model : User , as : 'user' , attributes: ['name' , 'forename' , 'email' , 'phone'] }
             ]
