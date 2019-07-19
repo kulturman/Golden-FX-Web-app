@@ -128,6 +128,22 @@ class Dashboard extends Component {
                             </div>
                         </div>)
                     }
+                    {
+                        user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-4">
+                            <div className="p-grid overview-box overview-box-3">
+                                <div className="overview-box-title">
+                                    <i className="fa fa-bank" />
+                                    <span>Demandes de retraits</span>
+                                </div>
+                                <div className="overview-box-count">
+                                    {dashboard.waitingWithdrawalsCount}
+                                </div>
+                                <div className="overview-box-stats">
+                                    En attente de traitement
+                                </div>
+                            </div>
+                        </div>)
+                    }
                     <div className="p-lg-8">
                         <div className="card">
                             <h1 className="centerText">

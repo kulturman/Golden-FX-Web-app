@@ -84,22 +84,19 @@ router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req 
         });
     }
 
-    catch(err) {console.log(err);
+    catch(err) {
         if(err) transaction.rollback();
     }
 })
 
 router.get('/dashboard' , auth , async (req , res) => {
-    const userId = req.payload.user.id;
+    const { user } = req.payload;
+    const userId = user.id;
     const usersCount = await User.findOne({
         attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'usersCount']],
         where: { isAdmin: false , deleted: false }
     });
     const misc = await Misc.findOne();
-    const userCurrentFundAmount = await User.findOne({
-        where: { id: userId },
-        attributes: ['amount' , 'currentAmount']
-    });
     const lastVariations = await FundVariation.findAll({
         attributes: ['percentage' , 'date' , 'loss'],
         limit: 10,
@@ -107,17 +104,29 @@ router.get('/dashboard' , auth , async (req , res) => {
             ['createdAt' , 'DESC']
         ]
     });
-    const userTotalGains = await User.getUserGains(userId) - await User.getWithdrawalsTotal(userId);
-    return res.send({
+    const data = {
         usersCount: usersCount.dataValues.usersCount,
         lastVariations,
         fundCurrentAmount: misc.dataValues.fundCurrentAmount,
         fundAmount: misc.dataValues.fundAmount,
-        userCurrentFundAmount: userCurrentFundAmount.dataValues.currentAmount,
-        userFundAmount: userCurrentFundAmount.dataValues.amount,
-        userTotalGains,
         graphData: await FundVariation.getDataForGraphByDays('2019-01-01')
-    });
+    }
+
+    if(!user.isAdmin) {
+        const userCurrentFundAmount = await User.findOne({
+            where: { id: userId },
+            attributes: ['amount' , 'currentAmount']
+        });
+        data.userCurrentFundAmount = userCurrentFundAmount.dataValues.currentAmount,
+        data.userFundAmount = userCurrentFundAmount.dataValues.amount,
+        data.userTotalGains = await User.getUserGains(userId) - await User.getWithdrawalsTotal(userId);
+    }
+
+    else {
+        const { waitingWithdrawalsCount } = await Withdrawal.getWaitingWithdrawalsCount();
+        data.waitingWithdrawalsCount = waitingWithdrawalsCount;
+    }
+    return res.send(data);
 })
 
 router.post('/change-password' , [ auth , changePasswordValidator() ] , async (req , res) => {

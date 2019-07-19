@@ -7,7 +7,8 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
-    dialect: "mysql"
+    dialect: "mysql",
+    logging: process.env.NODE_ENV === 'development'
   }
 );
 

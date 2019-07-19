@@ -9,4 +9,12 @@ const Withdrawal = sequelize.define('withdrawal', {
 );
 Withdrawal.belongsTo(User , { foreignKey: 'userId' , as: 'user'});
 
+Withdrawal.getWaitingWithdrawalsCount = async () => {
+    return Withdrawal.findOne({
+        attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'waitingWithdrawalsCount']],
+        where: { granted: false },
+        raw: true
+    })
+}
+
 module.exports = Withdrawal;
