@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
     users: null,
-    editingUser: null
+    editingUser: null,
+    applications: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 users: action.payload
+            };
+        case actionTypes.SET_APPLICATIONS:
+            return {
+                ...state,
+                applications: action.payload
             };
         case actionTypes.SET_EDITING_USER:
             return {

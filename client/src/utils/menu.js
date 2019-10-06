@@ -23,7 +23,7 @@ const createUserMenu = user => {console.log('usessr' , user)
         icon: "fa fa-fw fa-users",
         items: [
             { label: "Liste des utilisateurs", to: "/utilisateurs" },
-            { label: "Liste d'attente", to: "" },
+            { label: "Liste d'attente", to: "/liste-d-attente" },
             { label: "Ajouter un utilisateur", to: "/nouvel-utilisateur" }
         ]
     };

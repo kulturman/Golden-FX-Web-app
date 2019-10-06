@@ -23,4 +23,10 @@ const getUser = id => {
     })
 }
 
-export { fetchUsers , deleteUser , getUser , updateUser }
+const fetchApplications = () => {
+    return makeRequest('/applications' , 'GET' , {} , (data , dispatch) => {
+        dispatch({ type: actionTypes.SET_APPLICATIONS , payload: data});
+    })
+}
+
+export { fetchUsers , deleteUser , getUser , updateUser , fetchApplications }

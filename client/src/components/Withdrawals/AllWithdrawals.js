@@ -12,15 +12,17 @@ class AllWithdrawals extends Component {
         super();
         this.dateTemplate = this.dateTemplate.bind(this);
         this.stateTemplate = this.stateTemplate.bind(this);
+        this.userTemplate = this.userTemplate.bind(this); 
     }
 
-    dateTemplate(rowData, column) {
+    dateTemplate(rowData) {
         return formatDate(rowData.createdAt);
     }
-
-
-    stateTemplate(rowData, column) {
+    stateTemplate(rowData) {
         return rowData.granted ? "Accordée" : "En attente de traitement!";
+    }
+    userTemplate({user}) {
+        return (user && this.props.user.isAdmin) ? user.name + " " + user.forename + ` (${user.phone})` : '-'
     }
 
     state = {
@@ -40,7 +42,7 @@ class AllWithdrawals extends Component {
                     value={this.props.withdrawals}
                     paginatorPosition="both"
                     selectionMode="single"
-                    header="Liste de toutes les demandes de retrait effectuées sur le fond"
+                    header="Liste de toutes les demandes de retrait effectuées sur le fonds"
                     paginator={true}
                     rows={10}
                     responsive={true}
@@ -52,14 +54,16 @@ class AllWithdrawals extends Component {
                     <Column field="id" header="Id" sortable={true} />
                     <Column field="amount" header="Montant" sortable={true} />
                     <Column
-                    
-                        field="createdAt"
+                        header="Partenaire"
+                        sortable={true}
+                        body={this.userTemplate}
+                    />
+                    <Column
                         header="Date de demande"
                         sortable={true}
                         body={this.dateTemplate}
                     />
                     <Column
-                        field="state"
                         header="Etat"
                         body={this.stateTemplate}
                     />
@@ -95,7 +99,8 @@ class AllWithdrawals extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
-        withdrawals: state.operation.withdrawals
+        withdrawals: state.operation.withdrawals,
+        user: state.auth.user
     };
 };
 

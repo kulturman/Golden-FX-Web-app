@@ -26,6 +26,7 @@ import AddDayliEvolution from "./components/Funds/AddDayliEvolution";
 import UserFundVariations from "./components/Funds/UserFundVariations";
 import ChangePassword from "./components/Users/ChangePassword";
 import UpdateUser from "./components/Users/UpdateUser";
+import Applications from "./components/Users/Applications";
 
 class App extends Component {
     constructor(props) {
@@ -261,7 +262,7 @@ class App extends Component {
             icon: "fa fa-fw fa-users",
             items: [
                 { label: "Liste des utilisateurs", to: "/utilisateurs" },
-                { label: "Liste d'attente", to: "" },
+                { label: "Liste d'attente", to: "/liste-d-attente" },
                 { label: "Ajouter un utilisateur", to: "/nouvel-utilisateur" }
             ]
         };
@@ -383,6 +384,14 @@ class App extends Component {
                             path="/utilisateurs"
                             exact
                             component={AllUsers}
+                        />
+
+                        <PrivateRoute
+                            isAllowed={user}
+                            redirectTo="/"
+                            path="/liste-d-attente"
+                            exact
+                            component={Applications}
                         />
 
                         <PrivateRoute

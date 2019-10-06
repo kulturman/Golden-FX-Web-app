@@ -27,7 +27,19 @@ router.post('/' , [ auth , withdrawValidator() ] , async (req , res) => {
 })
 
 router.get('/' , [ auth ] , async (req , res) => {
-    return res.send(await Withdrawal.findAll());
+    const user = req.payload.user;
+    let data = null;
+    if(user.isAdmin) {
+        data = await Withdrawal.findAll({
+            include: [
+                { model : User , as : 'user' , attributes: ['name' , 'forename' , 'phone'] }
+            ]
+        })
+    }
+    else {
+        data = await Withdrawal.findAll();
+    }
+    return res.send(data);
 })
 
 router.get('/my-withdrawals' , [ auth ] , async (req , res) => {
