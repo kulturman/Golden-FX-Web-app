@@ -101,7 +101,7 @@ router.get('/dashboard' , auth , async (req , res) => {
         attributes: ['percentage' , 'date' , 'loss'],
         limit: 10,
         order: [
-            ['createdAt' , 'DESC']
+            ['date' , 'DESC']
         ]
     });
     const data = {
@@ -157,7 +157,10 @@ router.get('/my-withdrawals' , auth , async (req , res) => {
 
 router.get('/' , [ auth , isAdmin ] , async (req , res) => {
     const users = await User.findAll({
-        attributes: ['id' , 'name' , 'forename' , 'email' , 'phone' , 'profession' , 'isAdmin' , 'createdAt' , 'amount'],
+        attributes: [
+            'id' , 'name' , 'forename' , 'email' , 'phone' , 'profession' ,
+             'isAdmin' , 'createdAt' , 'amount' , 'currentAmount'
+        ],
         where: { deleted: false }
     });
     return res.send(users);
@@ -186,7 +189,7 @@ router.delete('/:id' , [ auth , isAdmin ] , async (req , res) => {
             transaction.commit();
         }
 
-        catch(err) {console.log(err);
+        catch(err) {
             if(err) transaction.rollback();
         }
     }
@@ -199,12 +202,46 @@ router.put('/:id' , [ updateValidator() , auth , isAdmin ] , async (req , res) =
         return res.status(400).send(errorResponse);
     }
     const updatedInfos = _.pick(req.body , [
-        'name' , 'forename' , 'email' , 'profession' , 'phone' , 'address'
+        'name' , 'forename' , 'email' , 'profession' , 'phone' , 'address' , 'amount'
     ]);
     /*const emailAlreadyUsed = User.find({
         email: updatedInfos.email
     })*/
     const user = await User.findByPk(req.params.id);
+    let transaction = await sequelize.transaction();
+    if(!user.isAdmin && (!req.body.amount || isNaN(req.body.amount))) {
+        errorResponse.amount = ['Vous devez entrer un montant valide'];
+        return res.status(400).send(errorResponse);
+    }
+    if(!user.isAdmin) {
+        const amountDiff = updatedInfos['amount'] - user.amount;
+        const misc = await Misc.findOne();
+        if(amountDiff < 0 && -amountDiff > user.currentAmount) {
+            errorResponse.amount = [
+                `Impossible de faire cette opération, le montant actuel du client est inférieur
+                à la somme que vous essayer "d'enlever"
+                `
+            ];
+            return res.status(400).send(errorResponse);
+        }
+        try {
+            updatedInfos['currentAmount'] = user.currentAmount + amountDiff;
+            console.log(+updatedInfos['currentAmount']);
+            await user.update({
+                ...updatedInfos
+            } , { transaction });
+            await misc.update({
+                fundAmount: misc.fundAmount + amountDiff,
+                fundCurrentAmount: misc.fundCurrentAmount + amountDiff
+            } , { transaction })
+            transaction.commit();
+            return res.send(user);
+        }
+
+        catch(err) {console.log(err);
+            if(err) transaction.rollback();
+        }
+    }
     return res.send(await user.update(updatedInfos));
 })
 module.exports = router;

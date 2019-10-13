@@ -97,6 +97,7 @@ class AllUsers extends Component {
                     <Column field="phone" header="Téléphone" />
                     <Column field="profession" header="Profession" />
                     <Column header="Montant investi" body={(data) => data.isAdmin ? '-' : formatMoney(data.amount)}/>
+                    <Column header="Montant actuel" body={(data) => data.isAdmin ? '-' : formatMoney(data.currentAmount)}/>
                     <Column field="isAdmin" header="Administrateur" body={this.isAdminTemplate} />
                     <Column
                         field="createdAt"

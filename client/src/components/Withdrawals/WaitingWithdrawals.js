@@ -16,6 +16,7 @@ class WaitingWithdrawals extends Component {
         this.dateTemplate = this.dateTemplate.bind(this);
         this.userTemplate = this.userTemplate.bind(this);
         this.grant = this.grant.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -29,6 +30,12 @@ class WaitingWithdrawals extends Component {
         util.questionDialog('Voulez vous vraiment accorder cette demande?' , () => {
             this.props.onGrantWithdrawals(this.state.selectedItem.id);
         });
+    }
+
+    delete() {
+        util.questionDialog('Voulez vous vraiment supprimer cette demainde' , () => {
+            
+        })
     }
 
     dateTemplate({ createdAt }) {
@@ -52,9 +59,16 @@ class WaitingWithdrawals extends Component {
             <div className="p-clearfix" style={{ width: "100%" }}>
                 <Button
                     style={{ float: "left" }}
-                    label="Accorder la demande"
+                    label="Accorder"
                     icon="pi pi-plus"
                     onClick={this.grant}
+                    disabled={!this.state.selectedItem}
+                />
+                <Button
+                    style={{ float: "left" }}
+                    label="Supprimer"
+                    icon="pi pi-trash"
+                    onClick={this.delete}
                     disabled={!this.state.selectedItem}
                 />
             </div>

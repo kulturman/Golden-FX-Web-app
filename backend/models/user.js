@@ -3,6 +3,7 @@ const DataTypes = require("sequelize");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const UserFundVariation = require("../models/userfundvariation");
+const { formatDateEnglish } = require('../util/util');
 
 const User = sequelize.define(
     "user",
@@ -73,14 +74,14 @@ User.updateUsersCurrentAmount = async variation => {
     if (variation.loss) {
         sql = `UPDATE users SET currentAmount = currentAmount - (currentAmount * ${
             variation.percentage
-        } / 100) WHERE deleted=0`;
+        } / 100) WHERE deleted=0 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
     } else {
         if (variation.realPercentage !== 0) {
             sql = `UPDATE users SET currentAmount = amount WHERE deleted=0`;
         } else {
             sql = `UPDATE users SET currentAmount = currentAmount + (currentAmount * ${
                 variation.percentage
-            } / 100) WHERE deleted=0`;
+            } / 100) WHERE deleted=0 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
         }
     }
     return await sequelize.query(sql, {
