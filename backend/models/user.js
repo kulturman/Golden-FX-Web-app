@@ -92,8 +92,14 @@ User.updateUsersCurrentAmount = async variation => {
 User.updateUsersFundVariationsAndAmount = async variation => {
     let user;
     let transaction = await sequelize.transaction();
+    const date = variation.date;
+    date.setHours(23 , 59 , 59 , 999);
     const users = await User.findAll({
-        where: { isAdmin: false , deleted: false }
+        where: {
+            isAdmin: false , deleted: false , createdAt: {
+                [DataTypes.Op.lte]: date
+            }
+        }
     });
 
     try {
