@@ -42,7 +42,7 @@ class Dashboard extends Component {
                     <div
                         className={
                             classnames('p-col-12 p-md-6' , {
-                                'p-lg-4' : user.isAdmin,
+                                'p-lg-3' : user.isAdmin,
                                 'p-lg-2' : !user.isAdmin,
                             })
                         }>
@@ -62,7 +62,7 @@ class Dashboard extends Component {
                     <div
                         className={
                             classnames('p-col-12 p-md-6' , {
-                                'p-lg-4' : user.isAdmin,
+                                'p-lg-3' : user.isAdmin,
                                 'p-lg-2' : !user.isAdmin,
                             })
                         }
@@ -129,7 +129,7 @@ class Dashboard extends Component {
                         </div>)
                     }
                     {
-                        user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-4">
+                        user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-3">
                             <div className="p-grid overview-box overview-box-3">
                                 <div className="overview-box-title">
                                     <i className="fa fa-bank" />
@@ -140,6 +140,22 @@ class Dashboard extends Component {
                                 </div>
                                 <div className="overview-box-stats">
                                     En attente de traitement
+                                </div>
+                            </div>
+                        </div>)
+                    }
+                    {
+                        user.isAdmin && (<div className="p-col-12 p-md-6 p-lg-3">
+                            <div className="p-grid overview-box overview-box-2">
+                                <div className="overview-box-title">
+                                    <i className="fa fa-usd" />
+                                    <span>Bénéfices non retirés</span>
+                                </div>
+                                <div className="overview-box-count">
+                                    {formatMoney(dashboard.currentTotalGainsMinusWithdrawals)}
+                                </div>
+                                <div className="overview-box-stats">
+                                   Tous les partenaires
                                 </div>
                             </div>
                         </div>)

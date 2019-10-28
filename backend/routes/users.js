@@ -8,7 +8,8 @@ const changePasswordValidator = require('../validation/changePassword');
 const User = require('../models/user');
 const FundVariation = require('../models/fundvariation');
 const Misc = require('../models/misc');
-const Withdrawal = require('../models/widthdrawal');;
+const Withdrawal = require('../models/widthdrawal');
+const UserFundVariation = require('../models/userfundvariation');
 const { getErrors , isEmpty } = require('../validation/util');
 const auth = require('../middlewares/auth');
 const isAdmin = require('../middlewares/isAdmin');
@@ -137,6 +138,8 @@ router.get('/dashboard' , auth , async (req , res) => {
     else {
         const { waitingWithdrawalsCount } = await Withdrawal.getWaitingWithdrawalsCount();
         data.waitingWithdrawalsCount = waitingWithdrawalsCount;
+        data.currentTotalGainsMinusWithdrawals = await UserFundVariation.getTotalGains()
+            await UserFundVariation.getWithdrawalsTotal()
     }
     return res.send(data);
 })
