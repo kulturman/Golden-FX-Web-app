@@ -95,7 +95,7 @@ router.post(
             await transaction.commit();
             await User.updateUsersFundVariationsAndAmount(createdVaritaion);
             return res.send(createdVaritaion);
-        } catch (err) {console.log(err);
+        } catch (err) {
             if (err) await transaction.rollback();
         }
         /*variation.amountWithVariation = misc.fundCurrentAmount;

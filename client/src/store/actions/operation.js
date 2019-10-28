@@ -4,10 +4,15 @@ import { makeRequest } from '../../utils/util';
 
 const grantWithdrawal = payload => {
     return makeRequest('/withdrawals/grant/' + payload , 'POST' , {} , (data , dispatch) => {
-        dispatch({ type: actionTypes.REMOVE_WITHDRAWAL , payload: data.id })
+        dispatch({ type: actionTypes.REMOVE_WITHDRAWAL , payload })
     } , false)
 }
 
+const deleteWithdrawal = payload => {
+    return makeRequest('/withdrawals/' + payload , 'DELETE' , {} , (data , dispatch) => {
+        dispatch({ type: actionTypes.REMOVE_WITHDRAWAL , payload })
+    } , false)
+}
 const fetchWithdrawals = url => {
     return makeRequest(url , 'GET' , {} , (data , dispatch) => {
         dispatch({ type: actionTypes.SET_WITHDRAWALS , payload: data });
@@ -55,5 +60,5 @@ const fetchWaitingWithdrawals = () => {
 export {
     fetchCurrentUserWithdrawals , newWithdrawal , fetchAllWithdrawals ,
     fetchWaitingWithdrawals , grantWithdrawal , fetchFundVariations , newDayliVariation,
-    fetchUserFundVariations
+    fetchUserFundVariations , deleteWithdrawal
 }

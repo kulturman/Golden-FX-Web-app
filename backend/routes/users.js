@@ -89,6 +89,18 @@ router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req 
     }
 })
 
+router.post('/reinitilize-password/:id' , [auth , isAdmin] , async (req , res) => {
+    const user = await User.findByPk(req.params.id);
+    const password = User.generatePassword();
+    await user.update({
+        password: await bcrypt.hash(password , await bcrypt.genSalt(10))
+    })
+    return res.send({
+        message: `Le mot de passe a été réinitialiser avec succès\n
+            Le nouveau mot de passe est: ${password}`
+    });
+})
+
 router.get('/dashboard' , auth , async (req , res) => {
     const { user } = req.payload;
     const userId = user.id;

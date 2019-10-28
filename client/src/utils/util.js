@@ -59,9 +59,15 @@ const makeRequest = (url , method , data = {} , callback = null , isFetchRequest
         dispatch({ type: actionTypes.FETCH_RESOURCE_START });
         axios({ url , method , data})
         .then(response => {
-            dispatch({ type: actionTypes.FETCH_RESOURCE_SUCCESS , isFetchRequest });
-            if(callback)
+            if(!isFetchRequest) {
+                dispatch({ type: actionTypes.FETCH_RESOURCE_SUCCESS , isFetchRequest , payload: response.data});
+            }
+            else {
+                dispatch({ type: actionTypes.FETCH_RESOURCE_SUCCESS , isFetchRequest });
+            }
+            if(callback) {
                 callback(response.data , dispatch);
+            }
         })
         .catch(err => {
             let errors = null;

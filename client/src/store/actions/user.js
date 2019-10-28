@@ -14,7 +14,11 @@ const deleteUser = id => {
 }
 
 const updateUser = (id , payload) => {
-    return makeRequest(`/users/${id}` , 'PUT' , payload , null , false )
+    return makeRequest(`/users/${id}` , 'PUT' , payload , null , false)
+}
+
+const reinitializePassword = payload => {
+    return makeRequest(`/users/reinitilize-password/${payload}` , 'POST' , {} , null , false)
 }
 
 const getUser = id => {
@@ -29,4 +33,4 @@ const fetchApplications = () => {
     })
 }
 
-export { fetchUsers , deleteUser , getUser , updateUser , fetchApplications }
+export { fetchUsers , deleteUser , getUser , updateUser , fetchApplications , reinitializePassword }

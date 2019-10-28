@@ -20,9 +20,9 @@ class WaitingWithdrawals extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const success = this.props.success;
-        if (success && prevProps.success !== success) {
-            util.successDialog("Votre demande a bien été transmise, elle sera prise en compte dès que possible");
+        const { successMessage } = this.props;
+        if (successMessage && prevProps.successMessage !== successMessage) {
+            util.successDialog(successMessage);
         }
     }
 
@@ -34,7 +34,7 @@ class WaitingWithdrawals extends Component {
 
     delete() {
         util.questionDialog('Voulez vous vraiment supprimer cette demainde' , () => {
-            
+            this.props.onDeleteWithdrawals(this.state.selectedItem.id);
         })
     }
 
@@ -136,7 +136,7 @@ class WaitingWithdrawals extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
-        success: state.fetchResource.success,
+        successMessage: state.fetchResource.successMessage,
         withdrawals: state.operation.withdrawals
     };
 };
@@ -144,7 +144,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFetchWithdrawals: () => dispatch(actions.fetchWaitingWithdrawals()),
-        onGrantWithdrawals: id => dispatch(actions.grantWithdrawal(id))
+        onGrantWithdrawals: id => dispatch(actions.grantWithdrawal(id)),
+        onDeleteWithdrawals: id => dispatch(actions.deleteWithdrawal(id)),
     };
 };
 export default connect(

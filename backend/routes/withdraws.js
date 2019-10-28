@@ -15,6 +15,12 @@ router.post('/' , [ auth , withdrawValidator() ] , async (req , res) => {
     if(req.body.amount > userTotalGains) {
         errorResponse.amount = [`Le montant demandé est supérieur à vos avoirs (${formatMoney(userTotalGains)})`];
     }
+    const withdrawal = await Withdrawal.findOne({
+        where: { granted: false , userId }
+    })
+    if(withdrawal) {
+        errorResponse.amount = [`Vous avez déjà une demande en cours de traitement`];
+    }
     if (!isEmpty(errorResponse)) {
         return res.status(400).send(errorResponse);
     }
@@ -95,8 +101,25 @@ router.post('/grant/:id' , [ auth , isAdmin , grantWithdrawalValidator() ] , asy
         await withdrawal.update({
             granted: true
         })
-        return res.send(withdrawal);
+        return res.send({
+            id: withdrawal.id,
+            message : 'Demande accordée avec succès'
+        });
     }
-    return res.status(404).send({ 'message' : "La ressource demandée n'existe pas" });
+    return res.status(404).send({
+        message : "La ressource demandée n'existe pas"
+    });
+})
+
+router.delete('/:id' , [auth , isAdmin] , async (req , res) => {
+    const id = req.params.id;
+    const withdrawal = await Withdrawal.findByPk(id);
+    if(withdrawal.granted) {
+        return res.status(400).send({'message' : 'Vous ne pouvez pas supprimer cette demande'});
+    }
+    await withdrawal.destroy();
+    return res.send({
+        'message' : "Demande supprimée avec succès"
+    });
 })
 module.exports = router;

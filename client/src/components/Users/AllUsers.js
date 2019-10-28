@@ -16,6 +16,7 @@ class AllUsers extends Component {
         this.dateTemplate = this.dateTemplate.bind(this);
         this.isAdminTemplate = this.isAdminTemplate.bind(this);
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
+        this.onReinitializePasswordHandler = this.onReinitializePasswordHandler.bind(this);
     }
 
     dateTemplate({ createdAt }) {
@@ -35,15 +36,22 @@ class AllUsers extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const success = this.props.success;
-        if (success && prevProps.success !== success) {
-            util.successDialog("L'utilisateur a été supprimé avec succès");
+        const successMessage = this.props.successMessage;
+        if (successMessage && prevProps.successMessage !== successMessage) {
+            util.successDialog(successMessage);
         }
     }
 
     onDeleteHandler() {
         util.questionDialog('Voulez vous vraiment supprimer cet utilisateur?' , () => {
             this.props.onDeleteUser(this.state.selectedItem.id);
+        });
+    }
+
+    onReinitializePasswordHandler() {
+        util.questionDialog(`Voulez vous vraiment réinitiliser
+            le mot de passe de cet utilisateur?` , () => {
+            this.props.onReinitializePassword(this.state.selectedItem.id);
         });
     }
 
@@ -65,8 +73,15 @@ class AllUsers extends Component {
                 />
                 <Button
                     style={{ float: "left" }}
+                    label="Réinitiliaser le mot de passe"
+                    icon="pi pi-refresh"
+                    disabled={!this.state.selectedItem}
+                    onClick={this.onReinitializePasswordHandler}
+                />
+                <Button
+                    style={{ float: "left" }}
                     label="Supprimer"
-                    icon="pi pi-bin"
+                    icon="pi pi-ban"
                     disabled={!this.state.selectedItem}
                     onClick={this.onDeleteHandler}
                 />
@@ -137,7 +152,7 @@ class AllUsers extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
-        success: state.fetchResource.success,
+        successMessage: state.fetchResource.successMessage,
         users: state.user.users
     };
 };
@@ -145,7 +160,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFetchUsers: () => dispatch(actions.fetchUsers()),
-        onDeleteUser: id => dispatch(actions.deleteUser(id))
+        onDeleteUser: id => dispatch(actions.deleteUser(id)),
+        onReinitializePassword : id => dispatch(actions.reinitializePassword(id))
     };
 };
 export default connect(

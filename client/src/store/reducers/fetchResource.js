@@ -40,7 +40,7 @@ const fetchresourceReducer = (state = initialState , action) => {
                 fetchSuccess: false
             };
         case actionTypes.FETCH_RESOURCE_SUCCESS:
-            let successMessage = '';
+            let successMessage = null;
             const { payload } = action;
             if(payload && payload.message) {
                 successMessage = payload.message;
