@@ -17,3 +17,12 @@
     font-weight: bold;
     /*font-family: 'Rubik Mono One', sans-serif*/
 }
+
+.footer-menu__items {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+.footer-menu {
+    text-align: center;
+}

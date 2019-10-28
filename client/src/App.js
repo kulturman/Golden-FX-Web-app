@@ -483,6 +483,20 @@ class App extends Component {
                             exact
                             component={UserFundVariations}
                         />
+                        <PrivateRoute
+                            isAllowed={user}
+                            redirectTo="/"
+                            path="/liste-filleuls"
+                            exact
+                            component={() => <h6>Bientot disponible</h6>}
+                        />
+                        <PrivateRoute
+                            isAllowed={user}
+                            redirectTo="/"
+                            path="/nouveau-filleul"
+                            exact
+                            component={() => <h6>Bientot disponible</h6>}
+                        />
                     </div>
 
                     <div className="layout-mask" />
