@@ -55,7 +55,7 @@ class Dashboard extends Component {
                                 {dashboard.usersCount}
                             </div>
                             <div className="overview-box-stats">
-                                Le fonds: {formatMoney(dashboard.fundAmount)}
+                                Fonds: {formatMoney(dashboard.fundAmount)}
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@ class Dashboard extends Component {
                                     {formatMoney(dashboard.userFundAmount)}
                                 </div>
                                 <div className="overview-box-stats">
-                                    Ceci est le montant investi
+                                    Montant investi
                                 </div>
                             </div>
                         </div>)
@@ -101,13 +101,13 @@ class Dashboard extends Component {
                             <div className="p-grid overview-box overview-box-3">
                                 <div className="overview-box-title">
                                     <i className="fa fa-money" />
-                                    <span>Capital restant actuel</span>
+                                    <span>Capital restant</span>
                                 </div>
                                 <div className="overview-box-count">
                                     {formatMoney(dashboard.userCurrentFundAmount)}
                                 </div>
                                 <div className="overview-box-stats">
-                                    Montant actuel de votre capital
+                                    Capital actuel
                                 </div>
                             </div>
                         </div>)

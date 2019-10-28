@@ -1,4 +1,4 @@
-const createUserMenu = user => {console.log('usessr' , user)
+const createUserMenu = user => {
     const menu = [
         {
             label: "Tableau de bord",

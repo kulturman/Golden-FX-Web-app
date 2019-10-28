@@ -267,6 +267,15 @@ class App extends Component {
             ]
         };
 
+        const godSonsMenu = {
+            label: "Parrainage",
+            icon: "fa fa-fw fa-users",
+            items: [
+                { label: "Liste de vos parrains", to: "/liste-filleuls" },
+                { label: "Inscrire un filleul au fonds", to: "/nouveau-filleul" }
+            ]
+        };
+
         const operationsSubmenu = {
             label: "Opérations",
             icon: "fa fa-fw fa-bars",
@@ -306,6 +315,9 @@ class App extends Component {
             }
             menu.push(operationsSubmenu);
             menu.push(fundSubmenu);
+            if(!user.isAdmin) {
+                menu.push(godSonsMenu);
+            }
         }
 
         this.menu = menu;
