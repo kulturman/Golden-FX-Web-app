@@ -27,6 +27,8 @@ import UserFundVariations from "./components/Funds/UserFundVariations";
 import ChangePassword from "./components/Users/ChangePassword";
 import UpdateUser from "./components/Users/UpdateUser";
 import Applications from "./components/Users/Applications";
+import GodSons from './components/Users/GodSons';
+import WaitingGodSons from "./components/Users/WaitingGodSons";
 
 class App extends Component {
     constructor(props) {
@@ -263,7 +265,7 @@ class App extends Component {
             items: [
                 { label: "Liste des utilisateurs", to: "/utilisateurs" },
                 { label: "Liste d'attente", to: "/liste-d-attente" },
-                { label: "Ajouter un utilisateur", to: "/nouvel-utilisateur" }
+                { label: "Ouvrir un compte", to: "/nouvel-utilisateur" }
             ]
         };
 
@@ -271,8 +273,9 @@ class App extends Component {
             label: "Parrainage",
             icon: "fa fa-fw fa-users",
             items: [
-                { label: "Liste de vos parrains", to: "/liste-filleuls" },
-                { label: "Inscrire un filleul au fonds", to: "/nouveau-filleul" }
+                { label: "Liste de vos filleuls en attente", to: "/liste-filleuls/en-attente" },
+                { label: "Liste de vos filleuls validés", to: "/liste-filleuls/valides" },
+                { label: "Ouvrir un compte de trading", to: "/nouveau-filleul" }
             ]
         };
 
@@ -486,16 +489,21 @@ class App extends Component {
                         <PrivateRoute
                             isAllowed={user}
                             redirectTo="/"
-                            path="/liste-filleuls"
+                            path="/nouveau-filleul"
                             exact
-                            component={() => <h6>Bientot disponible</h6>}
+                            component={NewUser}
                         />
                         <PrivateRoute
                             isAllowed={user}
                             redirectTo="/"
-                            path="/nouveau-filleul"
-                            exact
-                            component={() => <h6>Bientot disponible</h6>}
+                            path="/liste-filleuls/en-attente"
+                            component={WaitingGodSons}
+                        />
+                        <PrivateRoute
+                            isAllowed={user}
+                            redirectTo="/"
+                            path="/liste-filleuls/valides"
+                            component={GodSons}
                         />
                     </div>
 

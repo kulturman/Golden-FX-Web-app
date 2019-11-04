@@ -18,11 +18,16 @@ const User = sequelize.define(
         isAdmin: DataTypes.BOOLEAN,
         amount: DataTypes.DOUBLE,
         currentAmount: DataTypes.DOUBLE,
-        deleted: DataTypes.BOOLEAN
+        deleted: DataTypes.BOOLEAN,
+        activated: DataTypes.BOOLEAN,
+        godFatherId: DataTypes.INTEGER,
+        accountNumber: DataTypes.STRING,
+        institutionName: DataTypes.STRING,
+        identityProof: DataTypes.STRING
     },
     {}
 );
-User.associate = function(models) {};
+User.belongsTo(User , { foreignKey: 'godFatherId' , as: 'godFather'});
 
 User.prototype.generateToken = function() {
     return jwt.sign(
@@ -74,14 +79,14 @@ User.updateUsersCurrentAmount = async variation => {
     if (variation.loss) {
         sql = `UPDATE users SET currentAmount = currentAmount - (currentAmount * ${
             variation.percentage
-        } / 100) WHERE deleted=0 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
+        } / 100) WHERE deleted=0 AND activated=1 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
     } else {
         if (variation.realPercentage !== 0) {
             sql = `UPDATE users SET currentAmount = amount WHERE deleted=0`;
         } else {
             sql = `UPDATE users SET currentAmount = currentAmount + (currentAmount * ${
                 variation.percentage
-            } / 100) WHERE deleted=0 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
+            } / 100) WHERE deleted=0 AND activated=1 AND createdAt <= "${formatDateEnglish(variation.date)} 23:59:59"`;
         }
     }
     return await sequelize.query(sql, {
@@ -96,7 +101,7 @@ User.updateUsersFundVariationsAndAmount = async variation => {
     date.setHours(23 , 59 , 59 , 999);
     const users = await User.findAll({
         where: {
-            isAdmin: false , deleted: false , createdAt: {
+            isAdmin: false , deleted: false , activated: true , createdAt: {
                 [DataTypes.Op.lte]: date
             }
         }

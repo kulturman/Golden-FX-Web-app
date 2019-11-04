@@ -7,9 +7,27 @@ const fetchUsers = () => {
     })
 }
 
+const fetchGodSons = payload => {
+    return makeRequest(`/users/god-sons/${payload}` , 'GET' , {} , (data , dispatch) => {
+        dispatch({ type: actionTypes.SET_GOD_SONS , payload: data });
+    })
+}
+
 const deleteUser = id => {
     return makeRequest(`/users/${id}` , 'DELETE' , {} , (data , dispatch) => {
         dispatch({ type: actionTypes.DELETE_USER , payload: id });
+    } , false )
+}
+
+const deleteApplication = id => {
+    return makeRequest(`/applications/${id}` , 'DELETE' , {} , (data , dispatch) => {
+        dispatch({ type: actionTypes.DELETE_APPLICATION , payload: id });
+    } , false )
+}
+
+const validateApplication = id => {
+    return makeRequest(`/applications/validate/${id}` , 'PUT' , {} , (data , dispatch) => {
+        dispatch({ type: actionTypes.DELETE_APPLICATION , payload: id });
     } , false )
 }
 
@@ -33,4 +51,10 @@ const fetchApplications = () => {
     })
 }
 
-export { fetchUsers , deleteUser , getUser , updateUser , fetchApplications , reinitializePassword }
+export {
+    fetchUsers , deleteUser , getUser , updateUser , fetchApplications ,
+    reinitializePassword,
+    deleteApplication,
+    validateApplication,
+    fetchGodSons
+}

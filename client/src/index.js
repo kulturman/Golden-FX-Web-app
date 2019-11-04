@@ -13,8 +13,16 @@ import store from "./store/store";
 import history from './utils/history';
 import axios from 'axios';
 import * as actions from './store/actions/auth';
+import { BACKEND_URL } from './config';
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = BACKEND_URL;
+axios.interceptors.request.use(
+    config => {
+        config.headers = {'X-auth-token' : localStorage.getItem('jwtToken')}
+        return config;
+    },
+    error => Promise.reject(error)
+);
 store.dispatch(actions.authCheckState());
 
 ReactDOM.render(

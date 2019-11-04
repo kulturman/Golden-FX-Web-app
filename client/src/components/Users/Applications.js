@@ -15,6 +15,7 @@ class Applications extends Component {
         super();
         this.dateTemplate = this.dateTemplate.bind(this);
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
+        this.onValidateHandler = this.onValidateHandler.bind(this);
     }
 
     dateTemplate({ createdAt }) {
@@ -30,9 +31,9 @@ class Applications extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const success = this.props.success;
-        if (success && prevProps.success !== success) {
-            util.successDialog("L'utilisateur a été supprimé avec succès");
+        const successMessage = this.props.successMessage;
+        if (successMessage && prevProps.successMessage !== successMessage) {
+            util.successDialog(successMessage);
         }
     }
 
@@ -42,22 +43,35 @@ class Applications extends Component {
         });
     }
 
+    onValidateHandler() {
+        util.questionDialog('Voulez vous vraiment valider cette demande?' , () => {
+            this.props.onValidateApplication(this.state.selectedItem.id)
+        });
+    }
+
     render() {
         let footer = (
             <div className="p-clearfix" style={{ width: "100%" }}>
                 <Button
                     style={{ float: "left" }}
-                    label="Créer un utilisateur (valider la demande)"
+                    label="Valider la demande"
                     disabled={!this.state.selectedItem}
                     icon="pi pi-plus"
-                    onClick={() => this.props.history.push('/nouvel-utilisateur')}
+                    onClick={this.onValidateHandler}
                 />
                 <Button
                     style={{ float: "left" }}
                     label="Supprimer"
-                    icon="pi pi-bin"
+                    icon="pi pi-ban"
                     disabled={!this.state.selectedItem}
                     onClick={this.onDeleteHandler}
+                />
+                <Button
+                    style={{ float: "left" }}
+                    label="Modifier"
+                    icon="pi pi-pencil"
+                    disabled={!this.state.selectedItem}
+                    onClick={() => this.props.history.push(`/editer-un-utilisateur/${this.state.selectedItem.id}`)}
                 />
             </div>
         );
@@ -65,6 +79,7 @@ class Applications extends Component {
         if (!this.props.loading && this.props.applications) {
             content = (
                 <DataTable
+                    emptyMessage="Aucune demande en attente"
                     footer={footer}
                     value={this.props.applications}
                     paginatorPosition="both"
@@ -85,6 +100,21 @@ class Applications extends Component {
                     <Column field="phone" header="Téléphone" />
                     <Column field="profession" header="Profession" />
                     <Column header="Montant à investir" body={(data) => !data.amount ? 'Non précisé' : formatMoney(data.amount)}/>
+                    <Column field="accountNumber" header="N° compte" />
+                    <Column field="institutionName" header="Institution" />
+                    <Column body={({ identityProof }) => {
+                        return (
+                            identityProof ? <Button
+                                type="button"
+                                icon="pi pi-eye"
+                                className="p-button-success"
+                                onClick={e => {
+                                    window.open(identityProof , '_blank')
+                                }}
+                                style={{ marginRight: '.5em' }}>
+                            </Button> : null
+                        );
+                    }} header="Pièce d'identité" />
                     <Column
                         field="createdAt"
                         header="Date de de la demande"
@@ -123,7 +153,7 @@ class Applications extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
-        success: state.fetchResource.success,
+        successMessage: state.fetchResource.successMessage,
         applications: state.user.applications
     };
 };
@@ -131,7 +161,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFetchApplications: () => dispatch(actions.fetchApplications()),
-        onDeleteUser: id => dispatch(actions.deleteUser(id))
+        onDeleteUser: id => dispatch(actions.deleteApplication(id)),
+        onValidateApplication: id => dispatch(actions.validateApplication(id)),
     };
 };
 export default connect(

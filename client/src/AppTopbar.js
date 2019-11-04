@@ -50,12 +50,12 @@ class AppTopbar extends Component {
                 width: '600px'
             }}>
                 <img alt="Logo" src="assets/layout/images/logo.png" className="topbar-logo"  style = {{
-                        height: '60px',
+                        height: '70px',
                         marginTop: '-20px'
                     }}/>
                 <span style={{
                     fontSize: '1.4rem',
-                    'font-family': "'Rubik Mono One', sans-serif"
+                    'fontFamily': "'Rubik Mono One', sans-serif"
                 }}>Private Fund Management</span>
             </div>
 

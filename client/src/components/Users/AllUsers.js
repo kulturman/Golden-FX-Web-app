@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/user";
 import Spinner from "../UI/Spinner/Spinner";
-import { formatDate , formatMoney } from "../../utils/util";
+import { formatDate, formatMoney } from "../../utils/util";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import * as util from "../../utils/util";
@@ -43,7 +43,7 @@ class AllUsers extends Component {
     }
 
     onDeleteHandler() {
-        util.questionDialog('Voulez vous vraiment supprimer cet utilisateur?' , () => {
+        util.questionDialog('Voulez vous vraiment supprimer cet utilisateur?', () => {
             this.props.onDeleteUser(this.state.selectedItem.id);
         });
     }
@@ -51,8 +51,8 @@ class AllUsers extends Component {
     onReinitializePasswordHandler() {
         util.questionDialog(`Voulez vous vraiment réinitiliser
             le mot de passe de cet utilisateur?` , () => {
-            this.props.onReinitializePassword(this.state.selectedItem.id);
-        });
+                this.props.onReinitializePassword(this.state.selectedItem.id);
+            });
     }
 
     render() {
@@ -101,19 +101,34 @@ class AllUsers extends Component {
                     responsive={true}
                     selection={this.state.selectedItem}
                     onSelectionChange={e => {
-                        this.setState({selectedItem: e.value});
+                        this.setState({ selectedItem: e.value });
                     }}
                 >
                     <Column selectionMode="single" style={{ width: "3em" }} />
                     <Column field="id" header="Id" sortable={true} />
-                    <Column field="name" header="Nom" />
+                    <Column field="name" header="Nom &amp; Prénom" />
                     <Column field="forename" header="Prénom(s)" />
                     <Column field="email" header="Email" />
                     <Column field="phone" header="Téléphone" />
                     <Column field="profession" header="Profession" />
-                    <Column header="Montant investi" body={(data) => data.isAdmin ? '-' : formatMoney(data.amount)}/>
-                    <Column header="Montant actuel" body={(data) => data.isAdmin ? '-' : formatMoney(data.currentAmount)}/>
-                    <Column field="isAdmin" header="Administrateur" body={this.isAdminTemplate} />
+                    <Column header="Montant investi" body={(data) => data.isAdmin ? '-' : formatMoney(data.amount)} />
+                    <Column header="Montant actuel" body={(data) => data.isAdmin ? '-' : formatMoney(data.currentAmount)} />
+                    <Column field="accountNumber" header="N° compte" />
+                    <Column field="institutionName" header="Institution" />
+                    <Column body={({ identityProof }) => {
+                        return (
+                            identityProof ? <Button
+                                type="button"
+                                icon="pi pi-eye"
+                                className="p-button-success"
+                                onClick={e => {
+                                    window.open(identityProof , '_blank')
+                                }}
+                                style={{ marginRight: '.5em' }}>
+                            </Button> : null
+                        );
+                    }} header="Pièce d'identité" />
+                    <Column field="isAdmin" header="Admin" body={this.isAdminTemplate} />
                     <Column
                         field="createdAt"
                         header="Date de création"
@@ -161,7 +176,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onFetchUsers: () => dispatch(actions.fetchUsers()),
         onDeleteUser: id => dispatch(actions.deleteUser(id)),
-        onReinitializePassword : id => dispatch(actions.reinitializePassword(id))
+        onReinitializePassword: id => dispatch(actions.reinitializePassword(id))
     };
 };
 export default connect(

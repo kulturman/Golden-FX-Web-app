@@ -41,11 +41,11 @@ router.post('/login' , loginValidador() , async (req , res) => {
     });
 })
 
-router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req , res) => {
+router.post('/register' , [ auth , registerValidator() ] , async (req , res) => {
     let errorResponse = getErrors(req);
     let email = req.body.email || 'null';
     let user = await User.findOne({ where: { email , deleted: false } });
-
+    let loggedUser = req.payload.user;
     if(user) {
         errorResponse.email = ['Cette adresse email existe déjà'];
     }
@@ -58,30 +58,37 @@ router.post('/register' , [ auth , isAdmin , registerValidator() ] , async (req 
     }
     user = _.pick(req.body , [
         'name' , 'forename' , 'email' , 'profession' , 'phone' ,
-        'country' , 'address' , 'isAdmin' , 'amount'
+        'country' , 'address' , 'isAdmin' , 'amount',
+        'accountNumber' , 'institutionName' , 'identityProof'
     ]);
+    user.activated = loggedUser.isAdmin;
     if(!user.amount) {
         user.amount = 0;
     }
     user.currentAmount = user.amount;
     const password = User.generatePassword();
     user.password = await bcrypt.hash(password , await bcrypt.genSalt(10));
+    if(!loggedUser.isAdmin) {
+        user.godFatherId = loggedUser.id;
+    }
     let transaction = await sequelize.transaction();
     try {
         const createdUser = await User.create(user);
-        if(!user.isAdmin) {
+        if(!user.isAdmin && loggedUser.isAdmin) {
             const misc = await Misc.findOne();
             await misc.update({
                 fundCurrentAmount : +misc.fundCurrentAmount + +user.amount,
                 fundAmount : +misc.fundAmount + +user.amount,
             })
         }
+        let message = loggedUser.isAdmin ? `L'utilisateur ${user.email} a été créé avec succès\n
+            Le mot de passe est: ${password}
+        ` : 'La demande a été transmise avec succès, elle sera traitée par l\'admin dès que possible'
+
         transaction.commit();
         return res.send({
             user: createdUser,
-            message: `L'utilisateur ${user.email} a été créé avec succès\n
-                Le mot de passe est: ${password}
-            `
+            message
         });
     }
 
@@ -97,7 +104,7 @@ router.post('/reinitilize-password/:id' , [auth , isAdmin] , async (req , res) =
         password: await bcrypt.hash(password , await bcrypt.genSalt(10))
     })
     return res.send({
-        message: `Le mot de passe a été réinitialiser avec succès\n
+        message: `Le mot de passe a été réinitialisé avec succès\n
             Le nouveau mot de passe est: ${password}`
     });
 })
@@ -107,7 +114,7 @@ router.get('/dashboard' , auth , async (req , res) => {
     const userId = user.id;
     const usersCount = await User.findOne({
         attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'usersCount']],
-        where: { isAdmin: false , deleted: false }
+        where: { isAdmin: false , deleted: false , activated: true }
     });
     const misc = await Misc.findOne();
     const lastVariations = await FundVariation.findAll({
@@ -174,9 +181,10 @@ router.get('/' , [ auth , isAdmin ] , async (req , res) => {
     const users = await User.findAll({
         attributes: [
             'id' , 'name' , 'forename' , 'email' , 'phone' , 'profession' ,
-             'isAdmin' , 'createdAt' , 'amount' , 'currentAmount'
+             'isAdmin' , 'createdAt' , 'amount' , 'currentAmount' , 'identityProof',
+             'accountNumber' , 'institutionName'
         ],
-        where: { deleted: false }
+        where: { deleted: false , activated: true }
     });
     return res.send(users);
 })
@@ -189,7 +197,7 @@ router.delete('/:id' , [ auth , isAdmin ] , async (req , res) => {
     const user = await User.findByPk(req.params.id);
     const misc = await Misc.findOne();
     let transaction = await sequelize.transaction();
-    if(user.isAdmin) {
+    if(user.isAdmin || !user.activated) {
         await user.destroy();
     }
     else {
@@ -218,7 +226,11 @@ router.put('/:id' , [ updateValidator() , auth , isAdmin ] , async (req , res) =
     }
     const updatedInfos = _.pick(req.body , [
         'name' , 'forename' , 'email' , 'profession' , 'phone' , 'address' , 'amount'
+        , 'accountNumber' , 'institutionName'
     ]);
+    if(req.body.identityProof) {
+        updatedInfos.identityProof = req.body.identityProof;
+    }
     /*const emailAlreadyUsed = User.find({
         email: updatedInfos.email
     })*/
@@ -241,7 +253,6 @@ router.put('/:id' , [ updateValidator() , auth , isAdmin ] , async (req , res) =
         }
         try {
             updatedInfos['currentAmount'] = user.currentAmount + amountDiff;
-            console.log(+updatedInfos['currentAmount']);
             await user.update({
                 ...updatedInfos
             } , { transaction });
@@ -253,10 +264,20 @@ router.put('/:id' , [ updateValidator() , auth , isAdmin ] , async (req , res) =
             return res.send(user);
         }
 
-        catch(err) {console.log(err);
+        catch(err) {
             if(err) transaction.rollback();
         }
     }
     return res.send(await user.update(updatedInfos));
+})
+
+router.get('/god-sons/:state' , [auth] , async (req , res) => {
+    const { user } = req.payload;
+    return res.send(await User.findAll({
+        where: {
+            activated: req.params.state === 'active',
+            godFatherId: user.id,
+        }
+    }))
 })
 module.exports = router;

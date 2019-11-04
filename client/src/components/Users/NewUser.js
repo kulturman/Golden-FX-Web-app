@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
+import { FileUpload } from "primereact/fileupload";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { connect } from "react-redux";
@@ -8,14 +9,44 @@ import * as actions from "../../store/actions/auth";
 import { Message } from "primereact/message";
 import Spinner from "../UI/Spinner/Spinner";
 import * as util from "../../utils/util";
+import axios from 'axios';
+
 
 class NewUser extends Component {
-    onSubmit = e => {
+
+    constructor(props) {
+        super(props);
+        this.fileUpload = React.createRef();
+        this.image = "";
+    }
+
+    onSubmit = async e => {
         e.preventDefault();
-        this.props.onRegisterUser(this.state);
+        this.image = this.fileUpload.current.state.files[0];
+        if(!this.image) {
+            util.errorDialog('Veuillez sélectionner une image')
+            return;
+        }
+        const url = await this.handleImageUpload();
+        this.props.onRegisterUser({
+            ...this.state,
+            identityProof: url
+        });
     };
 
-    componentDidUpdate(prevProps) {// Le mot de passe est : ${this.props.registeredUser.password}
+    handleImageUpload = async () => {
+        const data = new FormData();
+        data.append('file' , this.image);
+        data.append('upload_preset' , 'golden-fx');
+        data.append('cloud_name' , 'kulturman-assets');
+        const axios_ = axios.create({
+            headers: {}
+        });
+        const response = await axios_.post('https://api.cloudinary.com/v1_1/kulturman-assets/image/upload' , data);
+        return response.data.url;
+    }
+
+    componentDidUpdate(prevProps) {
         const { successMessage } = this.props;
         if (successMessage && prevProps.successMessage !== successMessage) {
             util.successDialog(successMessage);
@@ -30,7 +61,10 @@ class NewUser extends Component {
         profession: "",
         phone: "",
         isAdmin: false,
-        amount: ""
+        amount: "",
+        accountNumber: "",
+        institutionName: "",
+        identityProof: ""
     };
 
     onChange = e => {
@@ -49,21 +83,23 @@ class NewUser extends Component {
             <div className="p-grid p-fluid">
                 <div className="p-col-12 p-lg-12">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
                                 <Link to="/">Accueil</Link>
                             </li>
+                            {
+                                this.props.user.isAdmin ? <li
+                                    className="breadcrumb-item active"
+                                    aria-current="page"
+                                >
+                                    <Link to="/utilisateurs">Utilisateurs</Link>
+                                </li> : null
+                            }
                             <li
-                                class="breadcrumb-item active"
+                                className="breadcrumb-item active"
                                 aria-current="page"
                             >
-                                <Link to="/utilisateurs">Utilisateurs</Link>
-                            </li>
-                            <li
-                                class="breadcrumb-item active"
-                                aria-current="page"
-                            >
-                                Nouvel utilisateur
+                                Ouvrir un compte
                             </li>
                         </ol>
                     </nav>
@@ -72,7 +108,7 @@ class NewUser extends Component {
                 <div className="p-col-12 p-lg-6 p-offset-3">
                     <form onSubmit={this.onSubmit}>
                         <div className="card card-w-title">
-                            <h1>Ajouter un utilisateur</h1>
+                            <h1>Ouvrir un compte</h1>
                             <div className=" p-lg-12">
                                 <div className="p-lg-12">
                                     <InputText
@@ -146,6 +182,48 @@ class NewUser extends Component {
                                         ) : null}
                                     </div>
                                 )}
+                                {this.state.isAdmin ? null : (
+                                    <div className="p-lg-12">
+                                        <InputText
+                                            placeholder="Numéro de compte"
+                                            value={this.state.accountNumber}
+                                            name="accountNumber"
+                                            onChange={this.onChange}
+                                        />
+                                        {errors && errors.accountNumber ? (
+                                            <Message
+                                                severity="error"
+                                                text={errors.accountNumber}
+                                            />
+                                        ) : null}
+                                    </div>
+                                )}
+                                {this.state.isAdmin ? null : (
+                                    <div className="p-lg-12">
+                                        <InputText
+                                            placeholder="Institution financière"
+                                            value={this.state.institutionName}
+                                            name="institutionName"
+                                            onChange={this.onChange}
+                                        />
+                                        {errors && errors.institutionName ? (
+                                            <Message
+                                                severity="error"
+                                                text={errors.institutionName}
+                                            />
+                                        ) : null}
+                                    </div>
+                                )}
+                                {this.state.isAdmin ? null : (
+                                    <FileUpload
+                                        accept="image/*"
+                                        chooseLabel="Uploader votre pièce d'identité"
+                                        onError={e => console.log(e.files)}
+                                        name="demo[]" url="./upload" customUpload={true}
+                                        uploadHandler={e => alert('yoooo')}
+                                        ref={this.fileUpload}
+                                     />
+                                )}
                                 <div className="p-lg-12">
                                     <InputText
                                         placeholder="Numéro de téléphone"
@@ -174,15 +252,18 @@ class NewUser extends Component {
                                         />
                                     ) : null}
                                 </div>
-                                <div className="p-lg-12">
-                                    <Checkbox
-                                        onChange={this.onCheckboxChange}
-                                        checked={this.state.isAdmin}
-                                    />
-                                    <label className="p-checkbox-label">
-                                        Administrateur ?
-                                    </label>
-                                </div>
+                                {
+                                    this.props.user.isAdmin ?
+                                        <div className="p-lg-12">
+                                            <Checkbox
+                                                onChange={this.onCheckboxChange}
+                                                checked={this.state.isAdmin}
+                                            />
+                                            <label className="p-checkbox-label">
+                                                Administrateur ?
+                                            </label>
+                                        </div> : null
+                                }
 
                                 <div className="p-lg-12">
                                     <Button
@@ -207,7 +288,7 @@ const mapStateToProps = state => {
         success: state.fetchResource.success,
         successMessage: state.fetchResource.successMessage,
         errors: state.fetchResource.errors,
-        registeredUser: state.auth.registeredUser
+        user: state.auth.user
     };
 };
 

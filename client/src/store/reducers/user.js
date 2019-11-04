@@ -1,9 +1,11 @@
 import * as actionTypes from "../actions/actionTypes";
+import { stat } from "fs";
 
 const initialState = {
     users: null,
     editingUser: null,
-    applications: null
+    applications: null,
+    godSons: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -23,21 +25,34 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 editingUser: action.payload
             };
-        case actionTypes.DELETE_USER:
-            const { payload: id } = action;
-            const users = [...state.users];
-            const index = users.findIndex(u => u.id === id);
-            if (index >= 0) {
-                users.splice(index, 1);
-                return {
-                    ...state,
-                    users
-                };
+        case actionTypes.SET_GOD_SONS:
+            return {
+                ...state,
+                godSons: action.payload
             }
-            return state;
+        case actionTypes.DELETE_USER:
+            return updateUsers(state , action);
+        case actionTypes.DELETE_APPLICATION:
+            return updateUsers(state , action);
         default:
             return state;
     }
 };
 
+const updateUsers = (state , action) => {
+    const { payload: id } = action;
+    const users = action.type == actionTypes.DELETE_USER ? [...state.users] : [...state.applications];
+    const index = users.findIndex(u => u.id === id)
+    if (index >= 0) {
+        users.splice(index, 1);
+        return action.type == actionTypes.DELETE_USER ? {
+            ...state,
+            users
+        } : {
+            ...state,
+            applications: users
+        };
+    }
+    return state;
+}
 export default userReducer;

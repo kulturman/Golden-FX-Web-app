@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as actionTypes from '../actions/actionTypes';
-import setAuthToken from '../../utils/setAuthToken';
 import jwtDecode from 'jwt-decode';
 import history from '../../utils/history';
 import { makeRequest } from '../../utils/util';
@@ -10,7 +9,6 @@ const authenticateUser = payload => {
         axios.post('/users/login' , payload)
         .then(response => {
             localStorage.setItem('jwtToken' , response.data.token);
-            setAuthToken(response.data.token);
             dispatch({type: actionTypes.FETCH_RESOURCE_SUCCESS});
             dispatch({type: actionTypes.AUTHENTICATE_USER_SUCCESS , payload: response.data});
             history.push('/');
@@ -44,7 +42,6 @@ const authCheckState = () => {
             }
             
             else {
-                setAuthToken(token);
                 dispatch({
                     type: actionTypes.AUTHENTICATE_USER_SUCCESS,
                     payload: {

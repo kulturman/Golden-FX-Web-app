@@ -8,10 +8,38 @@ import * as userActions from "../../store/actions/user";
 import { Message } from "primereact/message";
 import Spinner from "../UI/Spinner/Spinner";
 import * as util from "../../utils/util";
+import { FileUpload } from "primereact/fileupload";
+import axios from 'axios';
 
 class UpdateUser extends Component {
-    onSubmit = e => {
+    constructor(props) {
+        super(props);
+        this.fileUpload = React.createRef();
+        this.image = "";
+    }
+
+    handleImageUpload = async () => {
+        const data = new FormData();
+        data.append('file' , this.image);
+        data.append('upload_preset' , 'golden-fx');
+        data.append('cloud_name' , 'kulturman-assets');
+        const axios_ = axios.create({
+            headers: {}
+        });
+        const response = await axios_.post('https://api.cloudinary.com/v1_1/kulturman-assets/image/upload' , data);
+        return response.data.url;
+    }
+
+    onSubmit = async e => {
         e.preventDefault();
+        this.image = this.fileUpload.current.state.files[0];
+        if(this.image) {
+            const url = await this.handleImageUpload();
+            return this.props.onUserUpdate(this.props.user.id , {
+                ...this.state,
+                identityProof: url
+            });
+        }
         this.props.onUserUpdate(this.props.user.id , this.state);
     };
 
@@ -38,7 +66,9 @@ class UpdateUser extends Component {
         address: "",
         profession: "",
         phone: "",
-        amount: ""
+        amount: "",
+        accountNumber: "",
+        institutionName: ""
     };
 
     onChange = e => {
@@ -61,7 +91,10 @@ class UpdateUser extends Component {
                                 class="breadcrumb-item active"
                                 aria-current="page"
                             >
-                                <Link to="/utilisateurs">Utilisateurs</Link>
+                                {
+                                    this.state.activated ? <Link to="/utilisateurs">Utilisateurs</Link>
+                                    : <Link to="/liste-d-attente">Liste d'attente</Link>
+                                }
                             </li>
                             <li
                                 class="breadcrumb-item active"
@@ -149,6 +182,48 @@ class UpdateUser extends Component {
                                             />
                                         ) : null}
                                     </div>
+                                )}
+                                {this.state.isAdmin ? null : (
+                                    <div className="p-lg-12">
+                                        <InputText
+                                            placeholder="Numéro de compte"
+                                            value={this.state.accountNumber}
+                                            name="accountNumber"
+                                            onChange={this.onChange}
+                                        />
+                                        {errors && errors.accountNumber ? (
+                                            <Message
+                                                severity="error"
+                                                text={errors.accountNumber}
+                                            />
+                                        ) : null}
+                                    </div>
+                                )}
+                                {this.state.isAdmin ? null : (
+                                    <div className="p-lg-12">
+                                        <InputText
+                                            placeholder="Institution financière"
+                                            value={this.state.institutionName}
+                                            name="institutionName"
+                                            onChange={this.onChange}
+                                        />
+                                        {errors && errors.institutionName ? (
+                                            <Message
+                                                severity="error"
+                                                text={errors.institutionName}
+                                            />
+                                        ) : null}
+                                    </div>
+                                )}
+                                {this.state.isAdmin ? null : (
+                                    <FileUpload
+                                        accept="image/*"
+                                        chooseLabel="Mettre à jour la pièce d'identité"
+                                        onError={e => console.log(e.files)}
+                                        name="demo[]" url="./upload" customUpload={true}
+                                        uploadHandler={e => alert('yoooo')}
+                                        ref={this.fileUpload}
+                                     />
                                 )}
                                 <div className="p-lg-12">
                                     <InputText

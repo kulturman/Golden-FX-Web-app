@@ -2,56 +2,30 @@ import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions/operation";
+import * as actions from "../../store/actions/user";
 import Spinner from "../UI/Spinner/Spinner";
-import { formatDate } from "../../utils/util";
+import { formatDate, formatMoney } from "../../utils/util";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
-import * as util from '../../utils/util';
 
-class WaitingWithdrawals extends Component {
+class AllUsers extends Component {
 
     constructor() {
         super();
         this.dateTemplate = this.dateTemplate.bind(this);
-        this.userTemplate = this.userTemplate.bind(this);
-        this.grant = this.grant.bind(this);
-        this.delete = this.delete.bind(this);
-    }
-
-    componentDidUpdate(prevProps) {
-        const { successMessage } = this.props;
-        if (successMessage && prevProps.successMessage !== successMessage) {
-            util.successDialog(successMessage);
-        }
-    }
-
-    grant() {
-        util.questionDialog('Voulez vous vraiment accorder cette demande?' , () => {
-            this.props.onGrantWithdrawals(this.state.selectedItem.id);
-        });
-    }
-
-    delete() {
-        util.questionDialog('Voulez vous vraiment supprimer cette demainde' , () => {
-            this.props.onDeleteWithdrawals(this.state.selectedItem.id);
-        })
     }
 
     dateTemplate({ createdAt }) {
         return formatDate(createdAt);
     }
 
-    userTemplate({ user }) {
-        return user ? user.name + " " + user.forename + ` (${user.phone})` : ''
-    }
-
     state = {
-        selectedItem: null
+        selectedItem: null,
+        status: ''
     };
 
     componentDidMount() {
-        this.props.onFetchWithdrawals();
+        this.props.onFetchUsers('waiting');
     }
 
     render() {
@@ -59,49 +33,63 @@ class WaitingWithdrawals extends Component {
             <div className="p-clearfix" style={{ width: "100%" }}>
                 <Button
                     style={{ float: "left" }}
-                    label="Accorder"
+                    label="Créer un compte de trading"
                     icon="pi pi-plus"
-                    onClick={this.grant}
-                    disabled={!this.state.selectedItem}
+                    onClick={() => this.props.history.push('/nouvel-utilisateur')}
                 />
                 <Button
                     style={{ float: "left" }}
-                    label="Supprimer"
-                    icon="pi pi-trash"
-                    onClick={this.delete}
+                    label="Modifier"
+                    icon="pi pi-pencil"
                     disabled={!this.state.selectedItem}
+                    onClick={() => this.props.history.push(`/editer-un-utilisateur/${this.state.selectedItem.id}`)}
                 />
             </div>
         );
         let content = <Spinner />;
-        if (!this.props.loading && this.props.withdrawals) {
+        if (!this.props.loading && this.props.users) {
             content = (
                 <DataTable
-                    emptyMessage="Aucune demande en attente"
+                    emptyMessage="Aucun filleul trouvé"
                     footer={footer}
-                    value={this.props.withdrawals}
+                    value={this.props.users}
                     paginatorPosition="both"
                     selectionMode="single"
-                    header="Liste de toutes les demandes de retrait en attente de traitement"
+                    header="Liste de vos filleuls en attente de validation"
                     paginator={true}
                     rows={10}
                     responsive={true}
                     selection={this.state.selectedItem}
                     onSelectionChange={e => {
-                        this.setState({selectedItem: e.value});
+                        this.setState({ selectedItem: e.value });
                     }}
                 >
                     <Column selectionMode="single" style={{ width: "3em" }} />
-
                     <Column field="id" header="Id" sortable={true} />
-                    <Column field="amount" header="Montant" sortable={true} />
-                    <Column
-                        body={this.userTemplate}
-                        header="Auteur de la demande"
-                    />
+                    <Column field="name" header="Nom &amp; Prénom" />
+                    <Column field="forename" header="Prénom(s)" />
+                    <Column field="email" header="Email" />
+                    <Column field="phone" header="Téléphone" />
+                    <Column field="profession" header="Profession" />
+                    <Column header="Montant investi" body={(data) => data.isAdmin ? '-' : formatMoney(data.amount)} />
+                    <Column field="accountNumber" header="N° compte" />
+                    <Column field="institutionName" header="Institution" />
+                    <Column body={({ identityProof }) => {
+                        return (
+                            identityProof ? <Button
+                                type="button"
+                                icon="pi pi-eye"
+                                className="p-button-success"
+                                onClick={e => {
+                                    window.open(identityProof , '_blank')
+                                }}
+                                style={{ marginRight: '.5em' }}>
+                            </Button> : null
+                        );
+                    }} header="Pièce d'identité" />
                     <Column
                         field="createdAt"
-                        header="Date de demande"
+                        header="Date de création"
                         sortable={true}
                         body={this.dateTemplate}
                     />
@@ -112,20 +100,20 @@ class WaitingWithdrawals extends Component {
             <div className="p-grid">
                 <div className="p-col-12">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
                                 <Link to="/">Accueil</Link>
                             </li>
                             <li
-                                class="breadcrumb-item active"
+                                className="breadcrumb-item active"
                                 aria-current="page"
                             >
-                                Demandes de retrait en attente de traitement
+                                Liste de vos filleuls en attente de validation
                             </li>
                         </ol>
                     </nav>
                     <div className="card card-w-title">
-                        <h1>Demandes de retrait en attente de traitement</h1>
+                        <h1>Liste de vos filleuls en attente de validation</h1>
                         {content}
                     </div>
                 </div>
@@ -138,18 +126,16 @@ const mapStateToProps = state => {
     return {
         loading: state.fetchResource.loading,
         successMessage: state.fetchResource.successMessage,
-        withdrawals: state.operation.withdrawals
+        users: state.user.users
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchWithdrawals: () => dispatch(actions.fetchWaitingWithdrawals()),
-        onGrantWithdrawals: id => dispatch(actions.grantWithdrawal(id)),
-        onDeleteWithdrawals: id => dispatch(actions.deleteWithdrawal(id)),
+        onFetchUsers: status => dispatch(actions.fetchGodSons(status))
     };
 };
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(WaitingWithdrawals);
+)(AllUsers);
