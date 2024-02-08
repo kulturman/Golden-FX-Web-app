@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",
     "dotenv": "^8.0.0",
@@ -20,7 +20,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "develop": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

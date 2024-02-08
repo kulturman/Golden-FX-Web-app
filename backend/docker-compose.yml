@@ -1,0 +1,33 @@
+services:
+  database:
+    container_name: pfm-database
+    platform: linux/amd64
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: pfm
+      MYSQL_ROOT_PASSWORD: pfm
+      MYSQL_PASSWORD: pfm
+      MYSQL_DATABASE: pfm
+    volumes:
+        - app-data:/var/lib/mysql
+    ports:
+      - "33007:3306"
+  application:
+    container_name: pfm-app
+    build:
+      context: .
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - database
+    ports:
+        - 5000:5000
+    networks:
+      - pfm
+
+volumes:
+  app-data:
+
+networks:
+  pfm:
