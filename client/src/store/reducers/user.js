@@ -1,5 +1,4 @@
 import * as actionTypes from "../actions/actionTypes";
-import { stat } from "fs";
 
 const initialState = {
     users: null,
